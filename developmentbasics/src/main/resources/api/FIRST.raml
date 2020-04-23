@@ -1,0 +1,27 @@
+#%RAML 1.0
+title: Test
+version: v1
+mediaType: application/json
+baseUri: http://localhost:8081
+/select:
+  get:
+    responses: 
+      200:
+        body: 
+          
+      404:
+        body:
+          properties:
+            statusCode: string
+            message: string
+         
+      500:
+        body:
+  post:
+    body: 
+    responses: 
+    
+  /{empno}:  
+    post:
+      body: 
+      responses:   

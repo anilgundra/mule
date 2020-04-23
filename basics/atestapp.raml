@@ -1,0 +1,32 @@
+#%RAML 1.0
+title: test reqres hot
+baseUri: https://reqres.in/api
+mediaType: application/json
+types:
+  User:
+    type: object
+    properties:
+      id:
+        required: true
+        type: object
+      email: string 
+      first_name: string
+      last_name: string
+      avatar: string
+/users:
+  get: 
+    responses: 
+      200:
+        body:
+          properties:
+            statusCode: string
+            message: string  
+      404:
+        body: 
+          properties:
+            statusCode: string
+            message: string
+            
+          
+             
+                       

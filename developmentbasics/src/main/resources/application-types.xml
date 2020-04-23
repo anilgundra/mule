@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="suc" format="json">
+      <types:shape format="weave" example="examples/successRes.json"><![CDATA[%dw 2.0
+
+type suc = {|
+  generatedKeys: {|  |}, 
+  affectedRows: Number {"typeId": "int"}
+|} {"example": "{\\\"generatedKeys\\\":{},\\\"affectedRows\\\":1}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="resEmp" format="json">
+      <types:shape format="weave" example="examples/resEmp"><![CDATA[%dw 2.0
+
+type resEmp = {|
+  EMPNAME: String, 
+  EMPSALARY: Number {"typeId": "int"}, 
+  EMPNO: Number {"typeId": "int"}
+|} {"example": "{\\\"EMPNAME\\\":\\\"Anil\\\",\\\"EMPSALARY\\\":40000,\\\"EMPNO\\\":2782}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#043e4e7c-335e-4798-ba09-9fca63bbd68e">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="suc"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#db062569-d0d7-42fa-8b36-7049b803286f">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="resEmp"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

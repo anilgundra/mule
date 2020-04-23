@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="dbac1f07-a2f8-419d-8df3-22c442419bba" >
+		<file:connection workingDir="D:\" />
+	</file:config>
+	<flow name="ForEachFlow" doc:id="c77d5b20-101d-419c-93bf-7072fa1b5e57" >
+		<http:listener doc:name="Listener" doc:id="1651dc92-6296-499e-af16-ec4d9255bed9" config-ref="HTTP_Listener_config" path="/foreach">
+			<http:response >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<db:select doc:name="Select" doc:id="d9f57555-a17b-4cb7-8958-6189b4dfb790" config-ref="Database_Config">
+			<db:sql >select * from EMP</db:sql>
+		</db:select>
+		<foreach doc:name="For Each" doc:id="64873fa7-55ea-4475-b054-65022871184c" >
+			<ee:transform doc:name="Transform Message" doc:id="73ce4924-b509-43b8-ab25-3fddbde8b52e" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="31f2814e-c2dc-48bb-9667-6e1d8bfd65d4" message="#[payload.EMPNAME]"/>
+		</foreach>
+	</flow>
+	<flow name="parllelforeach" doc:id="930727bd-1a4a-4eb1-9380-df7508dd7788" >
+		<http:listener doc:name="Listener" doc:id="a8cd694c-6d8b-4c69-b23c-5cf0839573b4" config-ref="HTTP_Listener_config" path="/parllelforeach"/>
+		  <set-variable variableName="var1" value="var1"/>
+  			<set-variable variableName="var2" value="var2"/>
+		  <foreach collection="#[['apple', 'banana', 'orange']]">
+		       <choice>
+          <when expression="#[payload == 'apple']">
+              <set-variable variableName="var2" value="newValue"/>
+              <set-variable variableName="var3" value="appleVal"/>
+          </when>
+          <when expression="#[payload == 'banana']">
+              <set-variable variableName="var3" value="bananaVal"/>
+          </when>
+          <otherwise>
+              <set-variable variableName="var3" value="otherVal"/>
+              <set-variable variableName="var4" value="val4"/>
+          </otherwise>
+      </choice>
+		  </foreach>
+
+
+	</flow>
+</mule>

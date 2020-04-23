@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+
+
+	<email:smtp-config name="gmail_SMTP" doc:name="Email SMTP" doc:id="84f57e16-f189-4afe-8a5f-ffcc4e4553f3" >
+		<email:smtps-connection host="smtp.gmail.com" user="anil.gundra5@gmail.com" password="*********" >
+			<tls:context >
+				<tls:trust-store insecure="true" />
+			</tls:context>
+		</email:smtps-connection>
+	</email:smtp-config>
+	<!-- 	<email:pop3-config name="Email_POP3" doc:name="Email POP3" doc:id="bc0d5913-9795-46c6-93fc-de0ea8750730" >
+		<email:pop3s-connection host="pop.gmail.comm" user="anil.gundra5@gmail.com" password="143@amma" >
+			<tls:context >
+				<tls:trust-store insecure="true" />
+			</tls:context>
+		</email:pop3s-connection>
+	</email:pop3-config> -->
+	
+	<flow name="EmailFlow" doc:id="c5895ef8-9aea-4299-804e-65c9d130b96c" >
+		<http:listener doc:name="Listener" doc:id="0a8d3d07-e8e3-441b-b1da-99c933f8f2f2" config-ref="HTTP_Listener_config" path="/email/{mail}/{subject}/{message}"/>
+		<email:send doc:name="Send" doc:id="857344a4-e593-4a7a-a407-85759f302b2b" fromAddress="anil.gundra5@gmail.com" subject="#[attributes.uriParams.subject]" config-ref="gmail_SMTP">
+			<email:to-addresses >
+				<email:to-address value="#[attributes.uriParams.mail]" />
+			</email:to-addresses>
+			<email:body >
+				<email:content ><![CDATA[#[attributes.uriParams.message]]]></email:content>
+			</email:body>
+		</email:send>
+	</flow>
+	<flow name="EmailFlow1" doc:id="435fea5c-e964-4dba-9b00-7efc23ad1b5d" >
+		<logger level="INFO" doc:name="Logger" doc:id="7ee7f4ec-af9b-4a34-8023-13b2b4a72114" />
+	</flow>
+</mule>

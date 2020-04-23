@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>com.mulesoft.connectors</groupId>
+        <artifactId>mule-connectivity-parent</artifactId>
+        <version>1.2.4</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>mule-hl7-mllp-connector</artifactId>
+    <packaging>mule-extension</packaging>
+    <version>2.1.0</version>
+
+    <properties>
+        <licensePath>LICENSE.md</licensePath>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.mycila.maven-license-plugin</groupId>
+                    <artifactId>maven-license-plugin</artifactId>
+                    <version>1.8.0</version>
+                    <configuration>
+                        <header>LICENSE_HEADER.txt</header>
+                        <excludes>
+                            <exclude>target/**</exclude>
+                            <exclude>**/.mule/*</exclude>
+                            <exclude>**/.idea/*</exclude>
+                            <exclude>**/.gitignore</exclude>
+                            <exclude>**/*.txt</exclude>
+                            <exclude>**/*.ftl</exclude>
+                            <exclude>**/*.xml</exclude>
+                            <exclude>**/*.properties</exclude>
+                            <exclude>**/*.sample</exclude>
+                            <exclude>**/*.md</exclude>
+                            <exclude>**/build-number.txt</exclude>
+                            <exclude>**/*.xsd</exclude>
+                            <exclude>**/*.xls</exclude>
+                            <exclude>**/*.html</exclude>
+                            <exclude>**/resources/**</exclude>
+                            <exclude>id_file</exclude>
+                            <exclude>**/*.mflow</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+
+        </pluginManagement>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>mule-releases</id>
+            <name>Nexus Public Releases</name>
+            <url>https://repository-master.mulesoft.org/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+    <scm>
+        <connection>scm:git:git@github.com:mulesoft/mule-hl7-mllp-connector.git</connection>
+        <developerConnection>scm:git:git@github.com:mulesoft/mule-hl7-mllp-connector.git</developerConnection>
+        <url>https://github.com/mulesoft/mule-hl7-mllp-connector</url>
+      <tag>mule-hl7-mllp-connector-2.1.0</tag>
+  </scm>
+</project>

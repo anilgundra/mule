@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <parent>
+    <groupId>com.mulesoft.connectors</groupId>
+    <artifactId>mule-connectivity-parent</artifactId>
+    <version>1.2.4</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <name>HL7 EDI Connector</name>
+  <groupId>com.mulesoft.connectors</groupId>
+  <artifactId>mule-hl7-extension</artifactId>
+  <version>4.0.2</version>
+  <packaging>mule-extension</packaging>
+
+  <!-- duplicated here since parent is not the containing project -->
+  <properties>
+    <jdk.version>1.8</jdk.version>
+    <edi-parser.version>2.2.3</edi-parser.version>
+    <base.scala.version>2.12</base.scala.version>
+    <scala.version>${base.scala.version}.3</scala.version>
+    <licensePath>LICENSE.md</licensePath>
+    <mule.version>4.1.0</mule.version>
+    <munit.input.directory>src/test/munit</munit.input.directory>
+    <munit.output.directory>${basedir}/target/test-mule/munit</munit.output.directory>
+    <munit.extensions.maven.plugin.version>1.0.0-BETA</munit.extensions.maven.plugin.version>
+    <munit.version>2.2.0-BETA</munit.version>
+    <mavenResourcesVersion>3.0.2</mavenResourcesVersion>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.mule.edi</groupId>
+      <artifactId>edi-parser</artifactId>
+      <version>${edi-parser.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mule.edi</groupId>
+      <artifactId>schema-metadata</artifactId>
+      <version>${edi-parser.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.mulesoft.connectors</groupId>
+      <artifactId>hl7-schemas</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.mulesoft.mule.runtime.modules</groupId>
+      <artifactId>mule-module-spring-config-ee</artifactId>
+      <version>${mule.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.mulesoft.mule.runtime</groupId>
+      <artifactId>mule-core-ee</artifactId>
+      <version>${mule.version}</version>
+      <scope>provided</scope>
+    </dependency>
+<!-- used for testing JSON map input/output
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.9.3</version>
+      <scope>test</scope>
+    </dependency> -->
+  </dependencies>
+  
+   <build>
+    <plugins>
+      <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${mavenResourcesVersion}</version>
+          <executions>
+              <execution>
+                  <id>copy-munit-resources</id>
+                  <phase>process-test-resources</phase>
+                  <goals>
+                      <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                      <outputDirectory>${munit.output.directory}</outputDirectory>
+                      <resources>
+                          <resource>
+                              <directory>${munit.input.directory}</directory>
+                              <filtering>true</filtering>
+                          </resource>
+                      </resources>
+                  </configuration>
+              </execution>
+          </executions>
+      </plugin>
+      <plugin>
+         <groupId>com.mulesoft.munit</groupId>
+         <artifactId>munit-extensions-maven-plugin</artifactId>
+         <version>${munit.extensions.maven.plugin.version}</version>
+         <executions>
+             <execution>
+                 <goals>
+                     <goal>test</goal>
+                 </goals>
+                 <phase>integration-test</phase>
+             </execution>
+         </executions>
+        <dependencies>
+             <dependency>
+                 <groupId>com.mulesoft.munit</groupId>
+                 <artifactId>munit-runner</artifactId>
+                 <version>${munit.version}</version>
+                 <classifier>mule-plugin</classifier>
+             </dependency>
+             <dependency>
+                 <groupId>com.mulesoft.munit</groupId>
+                 <artifactId>munit-tools</artifactId>
+                 <version>${munit.version}</version>
+                 <classifier>mule-plugin</classifier>
+             </dependency>
+         </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+  
+  <repositories>
+    <repository>
+      <id>mulesoft-public</id>
+      <name>MuleSoft Releases Repository</name>
+      <url>https://repository-master.mulesoft.org/nexus/content/repositories/public</url>
+      <layout>default</layout>
+    </repository>
+    <repository>
+      <id>mule-ee-releases</id>
+      <name>MuleEE Releases Repository</name>
+      <url>https://repository-master.mulesoft.org/nexus/content/repositories/releases-ee/</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>mulesoft-public</id>
+      <name>MuleSoft Releases Repository</name>
+      <url>https://repository-master.mulesoft.org/nexus/content/repositories/public</url>
+      <layout>default</layout>
+    </pluginRepository>
+  </pluginRepositories>
+
+</project>

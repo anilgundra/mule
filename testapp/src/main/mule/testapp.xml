@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="8fea66d5-a2fa-442d-ace5-87996d5e5857" >
+		<http:listener-connection host="0.0.0.0" port="8082" />
+	</http:listener-config>
+	<flow name="testappFlow" doc:id="3bb1a592-f99a-4c56-8f16-3dfb9ed37282" >
+		<http:listener doc:name="Listener" doc:id="5a3367db-b638-4ecb-aacf-0d18bc73dfc0" config-ref="HTTP_Listener_config" path="/test"/>
+		<ee:transform doc:name="Transform Message" doc:id="7b4bc56f-811e-4262-a125-48eb7c35349c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var MyProducts = payload map{
+	pid:$.productId,
+	bname:$.brandName 
+	}
+	
+fun StrCheck(str1) = str1 match {
+	case is String -> upper(str1)
+  
+}
+	
+var filterObj = (MyProducts filter $.bname == "IBM")
+var a = 10
+var b = 32
+var c = 0
+---
+a ++ b]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="4af056dc-ebbb-411f-9416-da6af41fc75a" />
+	</flow>
+</mule>

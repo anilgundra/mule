@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:mule="http://www.mulesoft.org/schema/mule/core" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.mulesoft.org/schema/mule/ftps" attributeFormDefault="unqualified" elementFormDefault="qualified">
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace"></xs:import>
+  <xs:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans.xsd"></xs:import>
+  <xs:import namespace="http://www.mulesoft.org/schema/mule/core" schemaLocation="http://www.mulesoft.org/schema/mule/core/current/mule.xsd"></xs:import>
+  <xs:import namespace="http://www.mulesoft.org/schema/mule/tls" schemaLocation="http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd"></xs:import>
+  <xs:complexType name="com.mulesoft.extension.ftps.api.mode.FtpsMode">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractExtensionType"></xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="ftps:com.mulesoft.extension.ftps.api.mode.FtpsMode" substitutionGroup="mule:abstract-shared-extension" abstract="true" name="global-abstract-ftps-mode"></xs:element>
+  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" type="ftps:com.mulesoft.extension.ftps.api.mode.FtpsMode" abstract="true" name="abstract-ftps-mode"></xs:element>
+  <xs:complexType name="com.mulesoft.extension.ftps.api.mode.FtpsExplicitMode">
+    <xs:complexContent>
+      <xs:extension xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" base="ftps:com.mulesoft.extension.ftps.api.mode.FtpsMode">
+        <xs:attribute type="ftps:com.mulesoft.extension.ftps.api.mode.setting.ProtSettingEnumType" use="optional" name="protSetting"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" type="ftps:com.mulesoft.extension.ftps.api.mode.FtpsExplicitMode" substitutionGroup="ftps:abstract-ftps-mode" abstract="true" name="abstract-ftps-explicit-mode"></xs:element>
+  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" substitutionGroup="ftps:abstract-ftps-explicit-mode" name="ftps-explicit-mode">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="ftps:com.mulesoft.extension.ftps.api.mode.FtpsExplicitMode"></xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="com.mulesoft.extension.ftps.api.mode.FtpsImplicitMode">
+    <xs:complexContent>
+      <xs:extension xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" base="ftps:com.mulesoft.extension.ftps.api.mode.FtpsMode"></xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" type="ftps:com.mulesoft.extension.ftps.api.mode.FtpsImplicitMode" substitutionGroup="ftps:abstract-ftps-mode" abstract="true" name="abstract-ftps-implicit-mode"></xs:element>
+  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" substitutionGroup="ftps:abstract-ftps-implicit-mode" name="ftps-implicit-mode">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="ftps:com.mulesoft.extension.ftps.api.mode.FtpsImplicitMode"></xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="org.mule.extension.file.common.api.matcher.FileMatcher">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractExtensionType">
+        <xs:attribute type="mule:expressionString" use="optional" name="filenamePattern"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="pathPattern"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ftps" type="org.mule.extension.file.common.api.matcher.MatchPolicyEnumType" use="optional" default="INCLUDE" name="directories"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ftps" type="org.mule.extension.file.common.api.matcher.MatchPolicyEnumType" use="optional" default="INCLUDE" name="regularFiles"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ftps" type="org.mule.extension.file.common.api.matcher.MatchPolicyEnumType" use="optional" default="INCLUDE" name="symLinks"></xs:attribute>
+        <xs:attribute type="mule:expressionLong" use="optional" name="minSize"></xs:attribute>
+        <xs:attribute type="mule:expressionLong" use="optional" name="maxSize"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="ftps:org.mule.extension.file.common.api.matcher.FileMatcher" substitutionGroup="mule:abstract-shared-extension" abstract="true" name="global-abstract-file-matcher"></xs:element>
+  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" type="ftps:org.mule.extension.file.common.api.matcher.FileMatcher" abstract="true" name="abstract-file-matcher"></xs:element>
+  <xs:complexType name="org.mule.extension.ftp.api.FtpFileMatcher">
+    <xs:complexContent>
+      <xs:extension xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" base="ftps:org.mule.extension.file.common.api.matcher.FileMatcher">
+        <xs:attribute xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="mule:expressionDateTime" use="optional" name="timestampSince"></xs:attribute>
+        <xs:attribute xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="mule:expressionDateTime" use="optional" name="timestampUntil"></xs:attribute>
+        <xs:attribute xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="mule:expressionLong" use="optional" name="notUpdatedInTheLast"></xs:attribute>
+        <xs:attribute xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="mule:expressionLong" use="optional" name="updatedInTheLast"></xs:attribute>
+        <xs:attribute type="ftps:java.util.concurrent.TimeUnitEnumType" use="optional" default="SECONDS" name="timeUnit"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" substitutionGroup="ftps:global-abstract-file-matcher" abstract="true" name="abstract-matcher"></xs:element>
+  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" substitutionGroup="ftps:abstract-matcher" name="matcher">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="ftps:org.mule.extension.ftp.api.FtpFileMatcher">
+          <xs:attribute type="xs:string" use="optional" name="name"></xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="com.mulesoft.extension.ftps.api.mode.setting.ProtSettingExporter">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractExtensionType">
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ftps" type="com.mulesoft.extension.ftps.api.mode.setting.ProtSettingEnumType" use="required" name="protSetting"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="ftps:com.mulesoft.extension.ftps.api.mode.setting.ProtSettingExporter" substitutionGroup="mule:abstract-shared-extension" abstract="true" name="global-abstract-prot-setting-exporter"></xs:element>
+  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" type="ftps:com.mulesoft.extension.ftps.api.mode.setting.ProtSettingExporter" abstract="true" name="abstract-prot-setting-exporter"></xs:element>
+  <xs:complexType name="com.mulesoft.extension.ftps.api.mode.setting.ProtSettingExporterSubType">
+    <xs:complexContent>
+      <xs:extension xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" base="ftps:com.mulesoft.extension.ftps.api.mode.setting.ProtSettingExporter"></xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" type="ftps:com.mulesoft.extension.ftps.api.mode.setting.ProtSettingExporterSubType" substitutionGroup="ftps:abstract-prot-setting-exporter" abstract="true" name="abstract-prot-setting-exporter-sub-type"></xs:element>
+  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" substitutionGroup="ftps:abstract-prot-setting-exporter-sub-type" name="prot-setting-exporter-sub-type">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="ftps:com.mulesoft.extension.ftps.api.mode.setting.ProtSettingExporterSubType"></xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element xmlns:mule="http://www.mulesoft.org/schema/mule/core" substitutionGroup="mule:abstract-shared-extension" name="config">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="mule:abstractExtensionType">
+          <xs:annotation>
+            <xs:documentation>Default configuration</xs:documentation>
+          </xs:annotation>
+          <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element minOccurs="1" maxOccurs="1" ref="mule:abstractConnectionProvider"></xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" ref="mule:expiration-policy"></xs:element>
+          </xs:sequence>
+          <xs:attribute type="mule:expressionString" use="optional" name="defaultWriteEncoding"></xs:attribute>
+          <xs:attribute type="mule:expressionLong" use="optional" name="timeBetweenSizeCheck"></xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ftps" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="MILLISECONDS" name="timeBetweenSizeCheckUnit"></xs:attribute>
+          <xs:attribute type="xs:string" use="required" name="name">
+            <xs:annotation>
+              <xs:documentation>The identifier of this element used to reference it in other components</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element xmlns:mule="http://www.mulesoft.org/schema/mule/core" substitutionGroup="mule:abstractConnectionProvider" name="connection">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="mule:abstractConnectionProviderType">
+          <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element minOccurs="0" maxOccurs="1" ref="mule:reconnection"></xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" ref="mule:pooling-profile"></xs:element>
+            <xs:element xmlns:tls="http://www.mulesoft.org/schema/mule/tls" minOccurs="0" maxOccurs="1" ref="tls:context"></xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="ftps-mode">
+              <xs:complexType>
+                <xs:choice minOccurs="1" maxOccurs="1">
+                  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" minOccurs="1" maxOccurs="1" ref="ftps:abstract-ftps-mode"></xs:element>
+                  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" minOccurs="1" maxOccurs="1" ref="ftps:global-abstract-ftps-mode"></xs:element>
+                </xs:choice>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute type="xs:string" use="optional" name="tlsContext"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="workingDir"></xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ftps" type="org.mule.extension.ftp.api.ftp.FtpTransferModeEnumType" use="optional" default="BINARY" name="transferMode"></xs:attribute>
+          <xs:attribute type="mule:expressionBoolean" use="optional" default="true" name="passive"></xs:attribute>
+          <xs:attribute type="mule:expressionBoolean" use="optional" default="true" name="remoteVerificationEnabled"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" default="ISO-8859-1" name="controlEncoding"></xs:attribute>
+          <xs:attribute type="mule:expressionInt" use="optional" default="10" name="connectionTimeout"></xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ftps" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="SECONDS" name="connectionTimeoutUnit"></xs:attribute>
+          <xs:attribute type="mule:expressionInt" use="optional" default="10" name="responseTimeout"></xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ftps" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="SECONDS" name="responseTimeoutUnit"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="required" name="host"></xs:attribute>
+          <xs:attribute type="mule:expressionInt" use="optional" default="21" name="port"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="username"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="password"></xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/ftps" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="ListenerType" substitutionGroup="mule:abstract-message-source" name="listener"></xs:element>
+  <xs:complexType name="ListenerType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageSourceType">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-redelivery-policy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-byte-streaming-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element minOccurs="1" maxOccurs="1" ref="mule:scheduling-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="matcher">
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" base="ftps:org.mule.extension.ftp.api.FtpFileMatcher"></xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:string" use="optional" name="directory"></xs:attribute>
+        <xs:attribute type="mule:substitutableBoolean" use="optional" default="true" name="recursive"></xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="matcher"></xs:attribute>
+        <xs:attribute type="mule:substitutableBoolean" use="optional" default="false" name="watermarkEnabled"></xs:attribute>
+        <xs:attribute type="mule:substitutableLong" use="optional" name="timeBetweenSizeCheck"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ftps" type="java.util.concurrent.TimeUnitEnumType" use="optional" name="timeBetweenSizeCheckUnit"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="outputMimeType">
+          <xs:annotation>
+            <xs:documentation>The mime type of the payload that this operation outputs.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="outputEncoding">
+          <xs:annotation>
+            <xs:documentation>The encoding of the payload that this operation outputs.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:substitutableBoolean" use="optional" name="primaryNodeOnly">
+          <xs:annotation>
+            <xs:documentation>Whether this source should only be executed on the primary node when runnning in Cluster</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="autoDelete"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="moveToDirectory"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="renameTo"></xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="true" name="applyPostActionWhenFailed"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/ftps" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="CopyType" substitutionGroup="mule:abstract-operator" name="copy"></xs:element>
+  <xs:complexType name="CopyType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="sourcePath"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="required" name="targetPath"></xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="true" name="createParentDirectories"></xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="overwrite"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="renameTo"></xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/ftps" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="CreateDirectoryType" substitutionGroup="mule:abstract-operator" name="create-directory"></xs:element>
+  <xs:complexType name="CreateDirectoryType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="directoryPath"></xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/ftps" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="DeleteType" substitutionGroup="mule:abstract-operator" name="delete"></xs:element>
+  <xs:complexType name="DeleteType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="path"></xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/ftps" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="ListType" substitutionGroup="mule:abstract-operator" name="list"></xs:element>
+  <xs:complexType name="ListType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-object-streaming-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="matcher">
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" base="ftps:org.mule.extension.ftp.api.FtpFileMatcher"></xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="directoryPath"></xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="recursive"></xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="matcher"></xs:attribute>
+        <xs:attribute type="mule:expressionLong" use="optional" name="timeBetweenSizeCheck"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ftps" type="java.util.concurrent.TimeUnitEnumType" use="optional" name="timeBetweenSizeCheckUnit"></xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/ftps" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="MoveType" substitutionGroup="mule:abstract-operator" name="move"></xs:element>
+  <xs:complexType name="MoveType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="sourcePath"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="required" name="targetPath"></xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="true" name="createParentDirectories"></xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="overwrite"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="renameTo"></xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/ftps" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="ReadType" substitutionGroup="mule:abstract-operator" name="read"></xs:element>
+  <xs:complexType name="ReadType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-byte-streaming-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="path"></xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="lock"></xs:attribute>
+        <xs:attribute type="mule:expressionLong" use="optional" name="timeBetweenSizeCheck"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ftps" type="java.util.concurrent.TimeUnitEnumType" use="optional" name="timeBetweenSizeCheckUnit"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="outputMimeType">
+          <xs:annotation>
+            <xs:documentation>The mime type of the payload that this operation outputs.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="outputEncoding">
+          <xs:annotation>
+            <xs:documentation>The encoding of the payload that this operation outputs.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/ftps" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="RenameType" substitutionGroup="mule:abstract-operator" name="rename"></xs:element>
+  <xs:complexType name="RenameType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="path"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="required" name="to"></xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="overwrite"></xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/ftps" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="WriteType" substitutionGroup="mule:abstract-operator" name="write"></xs:element>
+  <xs:complexType name="WriteType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="content"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="path"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="encoding"></xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="true" name="createParentDirectories"></xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="lock"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ftps" type="org.mule.extension.file.common.api.FileWriteModeEnumType" use="optional" default="OVERWRITE" name="mode"></xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:mule="http://www.mulesoft.org/schema/mule/core" substitutionGroup="mule:abstractConnectionProvider" name="connection">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="mule:abstractConnectionProviderType">
+          <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element minOccurs="0" maxOccurs="1" ref="mule:reconnection"></xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" ref="mule:pooling-profile"></xs:element>
+            <xs:element xmlns:tls="http://www.mulesoft.org/schema/mule/tls" minOccurs="0" maxOccurs="1" ref="tls:context"></xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="ftps-mode">
+              <xs:complexType>
+                <xs:choice minOccurs="1" maxOccurs="1">
+                  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" minOccurs="1" maxOccurs="1" ref="ftps:abstract-ftps-mode"></xs:element>
+                  <xs:element xmlns:ftps="http://www.mulesoft.org/schema/mule/ftps" minOccurs="1" maxOccurs="1" ref="ftps:global-abstract-ftps-mode"></xs:element>
+                </xs:choice>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute type="xs:string" use="optional" name="tlsContext"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="workingDir"></xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ftps" type="org.mule.extension.ftp.api.ftp.FtpTransferModeEnumType" use="optional" default="BINARY" name="transferMode"></xs:attribute>
+          <xs:attribute type="mule:expressionBoolean" use="optional" default="true" name="passive"></xs:attribute>
+          <xs:attribute type="mule:expressionBoolean" use="optional" default="true" name="remoteVerificationEnabled"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" default="ISO-8859-1" name="controlEncoding"></xs:attribute>
+          <xs:attribute type="mule:expressionInt" use="optional" default="10" name="connectionTimeout"></xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ftps" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="SECONDS" name="connectionTimeoutUnit"></xs:attribute>
+          <xs:attribute type="mule:expressionInt" use="optional" default="10" name="responseTimeout"></xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ftps" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="SECONDS" name="responseTimeoutUnit"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="required" name="host"></xs:attribute>
+          <xs:attribute type="mule:expressionInt" use="optional" default="21" name="port"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="username"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="password"></xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="com.mulesoft.extension.ftps.api.mode.setting.ProtSettingEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="CLEAR"></xs:enumeration>
+          <xs:enumeration value="PRIVATE"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="org.mule.extension.file.common.api.matcher.MatchPolicyEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="REQUIRE"></xs:enumeration>
+          <xs:enumeration value="INCLUDE"></xs:enumeration>
+          <xs:enumeration value="EXCLUDE"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="java.util.concurrent.TimeUnitEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="NANOSECONDS"></xs:enumeration>
+          <xs:enumeration value="MICROSECONDS"></xs:enumeration>
+          <xs:enumeration value="MILLISECONDS"></xs:enumeration>
+          <xs:enumeration value="SECONDS"></xs:enumeration>
+          <xs:enumeration value="MINUTES"></xs:enumeration>
+          <xs:enumeration value="HOURS"></xs:enumeration>
+          <xs:enumeration value="DAYS"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="org.mule.extension.ftp.api.ftp.FtpTransferModeEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="BINARY"></xs:enumeration>
+          <xs:enumeration value="ASCII"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="org.mule.extension.file.common.api.FileWriteModeEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="OVERWRITE"></xs:enumeration>
+          <xs:enumeration value="APPEND"></xs:enumeration>
+          <xs:enumeration value="CREATE_NEW"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+</xs:schema>

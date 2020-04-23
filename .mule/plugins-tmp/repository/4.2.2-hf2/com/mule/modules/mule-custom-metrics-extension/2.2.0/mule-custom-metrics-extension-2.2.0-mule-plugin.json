@@ -1,0 +1,462 @@
+{
+  "minMuleVersion": "4.1.1",
+  "extensionModel": {
+    "types": [
+      {
+        "format": "java",
+        "annotations": {
+          "classInformation": {
+            "implementedInterfaces": [],
+            "parent": "",
+            "classname": "com.mule.modules.acm.internal.metric.Dimension",
+            "hasDefaultConstructor": true,
+            "isInstantiable": true,
+            "isFinal": false,
+            "genericTypes": [],
+            "isInterface": false,
+            "isAbstract": false,
+            "isMap": false
+          },
+          "typeId": "com.mule.modules.acm.internal.metric.Dimension",
+          "typeAlias": {"value": "Dimension"}
+        },
+        "type": "Object",
+        "fields": [
+          {
+            "annotations": {
+              "layout": {"layoutModel": {
+                "password": false,
+                "tabName": "General",
+                "query": false,
+                "text": false,
+                "order": 1
+              }},
+              "display": {"displayModel": {"displayName": "Name"}},
+              "expressionSupport": {"value": "NOT_SUPPORTED"}
+            },
+            "model": {"type": "String"},
+            "key": {
+              "name": "dimensionName",
+              "required": "true"
+            }
+          },
+          {
+            "annotations": {
+              "layout": {"layoutModel": {
+                "password": false,
+                "tabName": "General",
+                "query": false,
+                "text": false,
+                "order": 2
+              }},
+              "expressionSupport": {"value": "SUPPORTED"}
+            },
+            "model": {"type": "String"},
+            "key": {
+              "name": "value",
+              "required": "true"
+            }
+          },
+          {
+            "annotations": {
+              "layout": {"layoutModel": {
+                "password": false,
+                "tabName": "General",
+                "query": false,
+                "text": false,
+                "order": 3
+              }},
+              "default": "true",
+              "expressionSupport": {"value": "SUPPORTED"}
+            },
+            "model": {
+              "annotations": {"typeId": "boolean"},
+              "type": "Boolean"
+            },
+            "key": {"name": "collapsible"}
+          }
+        ]
+      },
+      {
+        "format": "java",
+        "annotations": {
+          "classInformation": {
+            "implementedInterfaces": [],
+            "parent": "",
+            "classname": "com.mule.modules.acm.internal.metric.Fact",
+            "hasDefaultConstructor": true,
+            "isInstantiable": true,
+            "isFinal": false,
+            "genericTypes": [],
+            "isInterface": false,
+            "isAbstract": false,
+            "isMap": false
+          },
+          "typeId": "com.mule.modules.acm.internal.metric.Fact",
+          "typeAlias": {"value": "Fact"}
+        },
+        "type": "Object",
+        "fields": [
+          {
+            "annotations": {
+              "layout": {"layoutModel": {
+                "password": false,
+                "tabName": "General",
+                "query": false,
+                "text": false,
+                "order": 1
+              }},
+              "display": {"displayModel": {"displayName": "Name"}},
+              "expressionSupport": {"value": "NOT_SUPPORTED"}
+            },
+            "model": {"type": "String"},
+            "key": {
+              "name": "factName",
+              "required": "true"
+            }
+          },
+          {
+            "annotations": {
+              "layout": {"layoutModel": {
+                "password": false,
+                "tabName": "General",
+                "query": false,
+                "text": false,
+                "order": 2
+              }},
+              "expressionSupport": {"value": "SUPPORTED"}
+            },
+            "model": {
+              "annotations": {"classInformation": {
+                "implementedInterfaces": ["java.lang.Comparable"],
+                "parent": "java.lang.Number",
+                "classname": "java.lang.Double",
+                "hasDefaultConstructor": false,
+                "isInstantiable": false,
+                "isFinal": true,
+                "genericTypes": [],
+                "isInterface": false,
+                "isAbstract": false,
+                "isMap": false
+              }},
+              "type": "Number"
+            },
+            "key": {
+              "name": "value",
+              "required": "true"
+            }
+          }
+        ]
+      }
+    ],
+    "messageSources": [],
+    "functions": [],
+    "configurations": [{
+      "externalLibraryModels": [],
+      "operations": [],
+      "messageSources": [],
+      "name": "config",
+      "description": "Default configuration",
+      "modelProperties": {"requiredForMetadata": {"requiredParameters": ["name"]}},
+      "stereotype": {
+        "parent": {
+          "namespace": "MULE",
+          "type": "MODULE_CONFIG"
+        },
+        "namespace": "CUSTOM-METRICS",
+        "type": "CONFIG"
+      },
+      "parameterGroupModels": [{
+        "name": "General",
+        "layoutModel": {
+          "password": false,
+          "query": false,
+          "text": false,
+          "order": 1
+        },
+        "description": "",
+        "modelProperties": {},
+        "parameters": [{
+          "role": "BEHAVIOUR",
+          "description": "The identifier of this element used to reference it in other components",
+          "modelProperties": {},
+          "type": {
+            "format": "java",
+            "type": "String"
+          },
+          "required": true,
+          "expressionSupport": "NOT_SUPPORTED",
+          "hasDynamicType": false,
+          "isConfigOverride": false,
+          "dslConfiguration": {
+            "allowTopLevelDefinition": false,
+            "allowsInlineDefinition": false,
+            "allowsReferences": false
+          },
+          "name": "name",
+          "layoutModel": {
+            "password": false,
+            "query": false,
+            "text": false,
+            "order": 1
+          },
+          "allowedStereotypeModels": [],
+          "isComponentId": true
+        }],
+        "exclusiveParametersModels": [],
+        "showInDsl": false
+      }],
+      "connectionProviders": []
+    }],
+    "externalLibraries": [],
+    "description": "This is the main class of an extension, is the entry point from which configurations, connection providers, operations and sources are going to be declared.",
+    "resources": [],
+    "subTypes": [],
+    "modelProperties": {},
+    "constructs": [],
+    "connectionProviders": [],
+    "version": "2.2.0",
+    "privilegedArtifacts": [],
+    "importedTypes": [],
+    "xmlDsl": {
+      "schemaVersion": "2.2.0",
+      "prefix": "custom-metrics",
+      "schemaLocation": "http://www.mulesoft.org/schema/mule/custom-metrics/current/mule-custom-metrics.xsd",
+      "namespace": "http://www.mulesoft.org/schema/mule/custom-metrics",
+      "xsdFileName": "mule-custom-metrics.xsd"
+    },
+    "operations": [{
+      "displayModel": {"displayName": "Send Custom Metric"},
+      "kind": "operation",
+      "executionType": "CPU_LITE",
+      "description": "",
+      "modelProperties": {},
+      "parameterGroupModels": [{
+        "name": "General",
+        "layoutModel": {
+          "password": false,
+          "query": false,
+          "text": false,
+          "order": 1
+        },
+        "description": "",
+        "modelProperties": {},
+        "parameters": [
+          {
+            "role": "BEHAVIOUR",
+            "description": "",
+            "modelProperties": {},
+            "type": {
+              "format": "java",
+              "type": "String"
+            },
+            "required": true,
+            "expressionSupport": "NOT_SUPPORTED",
+            "hasDynamicType": false,
+            "isConfigOverride": false,
+            "dslConfiguration": {
+              "allowTopLevelDefinition": false,
+              "allowsInlineDefinition": false,
+              "allowsReferences": false
+            },
+            "name": "metricName",
+            "layoutModel": {
+              "password": false,
+              "query": false,
+              "text": false,
+              "order": 1
+            },
+            "allowedStereotypeModels": [],
+            "isComponentId": false
+          },
+          {
+            "role": "BEHAVIOUR",
+            "description": "",
+            "modelProperties": {},
+            "type": {
+              "item": {"type": "@ref:com.mule.modules.acm.internal.metric.Dimension"},
+              "format": "java",
+              "annotations": {"classInformation": {
+                "implementedInterfaces": ["java.util.Collection"],
+                "parent": "",
+                "classname": "java.util.List",
+                "hasDefaultConstructor": false,
+                "isInstantiable": false,
+                "isFinal": false,
+                "genericTypes": ["com.mule.modules.acm.internal.metric.Dimension"],
+                "isInterface": true,
+                "isAbstract": true,
+                "isMap": false
+              }},
+              "type": "Array"
+            },
+            "required": true,
+            "expressionSupport": "SUPPORTED",
+            "hasDynamicType": false,
+            "isConfigOverride": false,
+            "dslConfiguration": {
+              "allowTopLevelDefinition": false,
+              "allowsInlineDefinition": true,
+              "allowsReferences": true
+            },
+            "name": "dimensions",
+            "layoutModel": {
+              "password": false,
+              "query": false,
+              "text": false,
+              "order": 2
+            },
+            "allowedStereotypeModels": [],
+            "isComponentId": false
+          },
+          {
+            "role": "BEHAVIOUR",
+            "description": "",
+            "modelProperties": {},
+            "type": {
+              "item": {"type": "@ref:com.mule.modules.acm.internal.metric.Fact"},
+              "format": "java",
+              "annotations": {"classInformation": {
+                "implementedInterfaces": ["java.util.Collection"],
+                "parent": "",
+                "classname": "java.util.List",
+                "hasDefaultConstructor": false,
+                "isInstantiable": false,
+                "isFinal": false,
+                "genericTypes": ["com.mule.modules.acm.internal.metric.Fact"],
+                "isInterface": true,
+                "isAbstract": true,
+                "isMap": false
+              }},
+              "type": "Array"
+            },
+            "required": true,
+            "expressionSupport": "SUPPORTED",
+            "hasDynamicType": false,
+            "isConfigOverride": false,
+            "dslConfiguration": {
+              "allowTopLevelDefinition": false,
+              "allowsInlineDefinition": true,
+              "allowsReferences": true
+            },
+            "name": "facts",
+            "layoutModel": {
+              "password": false,
+              "query": false,
+              "text": false,
+              "order": 3
+            },
+            "allowedStereotypeModels": [],
+            "isComponentId": false
+          },
+          {
+            "displayModel": {"displayName": "Throw runtime exception on validation failure"},
+            "role": "BEHAVIOUR",
+            "defaultValue": "false",
+            "description": "",
+            "modelProperties": {},
+            "type": {
+              "format": "java",
+              "annotations": {"typeId": "boolean"},
+              "type": "Boolean"
+            },
+            "required": false,
+            "expressionSupport": "NOT_SUPPORTED",
+            "hasDynamicType": false,
+            "isConfigOverride": false,
+            "dslConfiguration": {
+              "allowTopLevelDefinition": false,
+              "allowsInlineDefinition": false,
+              "allowsReferences": false
+            },
+            "name": "throwOnValidationFailure",
+            "layoutModel": {
+              "password": false,
+              "query": false,
+              "text": false,
+              "order": 4
+            },
+            "allowedStereotypeModels": [],
+            "isComponentId": false
+          }
+        ],
+        "exclusiveParametersModels": [],
+        "showInDsl": false
+      }],
+      "output": {
+        "hasDynamicType": false,
+        "description": "",
+        "modelProperties": {},
+        "type": {
+          "format": "java",
+          "type": "Void"
+        }
+      },
+      "outputAttributes": {
+        "hasDynamicType": false,
+        "description": "",
+        "modelProperties": {},
+        "type": {
+          "format": "java",
+          "type": "Void"
+        }
+      },
+      "supportsStreaming": false,
+      "requiresConnection": false,
+      "blocking": false,
+      "name": "send",
+      "stereotype": {
+        "parent": {
+          "parent": {
+            "namespace": "MULE",
+            "type": "PROCESSOR"
+          },
+          "namespace": "CUSTOM-METRICS",
+          "type": "PROCESSOR"
+        },
+        "namespace": "CUSTOM-METRICS",
+        "type": "SEND"
+      },
+      "nestedComponents": [],
+      "transactional": false,
+      "notifications": [],
+      "errors": ["CUSTOM-METRICS:INVALID_PARAMETER"]
+    }],
+    "vendor": "Mulesoft",
+    "name": "Anypoint Custom Metrics",
+    "privilegedPackages": [],
+    "category": "COMMUNITY",
+    "notifications": [],
+    "errors": [
+      {
+        "parent": "MULE:ANY",
+        "error": "MULE:CONNECTIVITY",
+        "handleable": true
+      },
+      {
+        "error": "MULE:ANY",
+        "handleable": true
+      },
+      {
+        "parent": "MULE:RETRY_EXHAUSTED",
+        "error": "CUSTOM-METRICS:RETRY_EXHAUSTED",
+        "handleable": true
+      },
+      {
+        "parent": "MULE:ANY",
+        "error": "MULE:RETRY_EXHAUSTED",
+        "handleable": true
+      },
+      {
+        "parent": "MULE:ANY",
+        "error": "CUSTOM-METRICS:INVALID_PARAMETER",
+        "handleable": true
+      },
+      {
+        "parent": "MULE:CONNECTIVITY",
+        "error": "CUSTOM-METRICS:CONNECTIVITY",
+        "handleable": true
+      }
+    ]
+  }
+}

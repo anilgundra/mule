@@ -1,0 +1,25 @@
+#%RAML 1.0
+title: API with DataTypes
+baseUri: http://reqres.in/api/
+types: 
+  User:
+    type: object
+    properties: 
+      id: 
+        required: true
+        type: string
+        
+      email: string
+      first_name: string
+      last_name: string
+      avatar: string
+/users:
+  get: 
+    responses: 
+      200:
+        body: 
+          application/json:
+            type: User 
+           
+     
+    

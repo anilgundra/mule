@@ -1,0 +1,37 @@
+{
+  "extensionModelLoaderDescriptor": {
+    "id": "java",
+    "attributes": {
+      "type": "com.mulesoft.connectors.ibmmq.internal.IBMMQConnector",
+      "version": "1.5.5"
+    }
+  },
+  "license": {
+    "allowsEvaluation": true
+  },
+  "name": "IBM MQ",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "privilegedExportedPackages": [],
+      "privilegedArtifactIds": [],
+      "exportedPackages": [
+        "com.mulesoft.connectors.ibmmq.api",
+        "com.mulesoft.connectors.ibmmq.api.connection",
+        "com.mulesoft.connectors.ibmmq.api.publisher",
+        "com.mulesoft.connectors.ibmmq.api.ack",
+        "com.mulesoft.connectors.ibmmq.api.connection.cache",
+        "com.mulesoft.connectors.ibmmq.api.connection.mode",
+        "com.mulesoft.connectors.ibmmq.api.ssl",
+        "com.mulesoft.connectors.ibmmq.api.consumer"
+      ],
+      "exportedResources": []
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  },
+  "minMuleVersion": "4.1.1"
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="VariablesFlow" doc:id="b40732da-d83f-4271-b7aa-477c738671e9" >
+		<http:listener doc:name="Listener" doc:id="71332ec1-3057-4516-9bc2-9f41451a1746" config-ref="HTTP_Listener_8081" path="/variable"/>
+		<ee:transform doc:name="Transform Message" doc:id="b97c78f3-7ae3-4fac-9b01-9918895b6854" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var msg = "Hello"
+
+var msg2 = (x = "aamo") -> "hello"
+
+var toUpper = (aString) -> upper(aString)
+
+var combined = (funct, msg="universe") -> funct(msg ++ " WORLD")
+fun str1(a: String) = {
+	name: a[0] ++ "sds" ++ a[1 to 2]
+}
+fun myFun() = do {
+var name = "hello"	
+---
+name
+}
+
+---
+[
+   msg: msg,
+   msg2: msg2(),
+   toUpper: toUpper(msg),
+   combined: combined(toUpper, "hello"),
+   combined2: combined(((x) -> lower(x) ++ " Today"), msg),
+   result:{name: myFun()},
+   StringDiv:str1("GUN")
+   
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="09c108ad-d94c-4f55-b6c4-c55d48698b49" />
+	</flow>
+</mule>

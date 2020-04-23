@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="Munit-test-suite.xml" />
+	<munit:before-suite name="Munit-test-suiteBefore_Suite" doc:id="2d8be060-5328-4d22-9576-62b7ced98251" >
+		<munit:set-event doc:name="Set Event" doc:id="c9abe933-c1bb-48fa-b76a-6b186ca88d8e">
+				<munit:attributes value="#[{ method : 'GET', uriParams : { payload : &quot;payload_1&quot;}}]" encoding="UTF-8" />
+			</munit:set-event>
+	</munit:before-suite>
+	<munit:test name="Munit-test-suite-MunitFlowTest" doc:id="b8c51598-8404-4f74-9b6b-4b5bbd7d661b" description="Test">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="e2bc8f20-08b7-4db2-bf7d-7c5206810e25" processor="mule:flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="choiceflow" attributeName="name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="myvariable" value="#['it\'s my payload']" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to MunitFlow" doc:id="18718b2e-3a49-44b5-97f4-7e38029e921e" name="MunitFlow"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="44efc32d-614d-49df-8e66-5bc2bc2f9e4b" expression="#[payload]" is="#[MunitTools::equalTo('response to my payload_1')]" message="payload is not payload_1"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="Munit-test-suite-MunitFlowTest1" doc:id="79394176-6aa9-4b74-b41e-c5176d75fba8" description="Test">
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="7696841e-2515-4ba1-a8e0-26c95a8a1753" >
+				<munit:attributes value="#[{ method : 'GET', uriParams : { payload : &quot;payload_1&quot;}}]" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to MunitFlow" doc:id="71ed8b2e-e89a-4943-a5b7-0e174264fe5e" name="MunitFlow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify call" doc:id="c5468902-57f8-4d76-b9d1-a7f7c1cfda65" processor="mule:flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="subflow_1" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

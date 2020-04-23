@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<salesforce:sfdc-config name="Salesforce_Config2" doc:name="Salesforce Config" doc:id="1913acfd-e554-4d9b-87f3-0acd265b03f3" >
+		<salesforce:cached-basic-connection username="anil.gundra@gmail.com" password="143@amma" securityToken="oVx5lt1sIwQqnWZwwJasfau6" />
+	</salesforce:sfdc-config>
+	<flow name="queryRecordFlow" doc:id="192ceedf-5f3f-4d9e-8a16-7646bbf38042" >
+		<http:listener doc:name="Listener" doc:id="4e9d3be7-c18d-4faa-b240-68b61a725dc6" config-ref="HTTP_Listener_config" path="/salesforcequery">
+			<http:response >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<choice doc:name="Choice" doc:id="077fe444-3d03-4014-b53a-339e2df59770" >
+			<when expression="#[attributes.queryParams.name]">
+				<salesforce:query doc:name="Query" doc:id="faf519e9-65fe-4c8e-becf-1357fc848b1e" config-ref="Salesforce_Config2">
+					<salesforce:salesforce-query >#[ 'select Name,BillingAddress,AccountNumber from Account where name = :name']</salesforce:salesforce-query>
+					<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	name : attributes.queryParams.name
+}]]]></salesforce:parameters>
+				</salesforce:query>
+			</when>
+			<otherwise >
+				<salesforce:query-all doc:name="Query all" doc:id="2aacc07f-8034-4ede-a97f-5401ed708b2c" config-ref="Salesforce_Config2">
+			<salesforce:salesforce-query>select Name,BillingAddress,AccountNumber from Account</salesforce:salesforce-query>
+		</salesforce:query-all>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="418f7f23-374c-44e4-a074-672f89c7a2d3" />
+	</flow>
+</mule>

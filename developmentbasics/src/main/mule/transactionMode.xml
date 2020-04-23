@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="transactionModeFlow" doc:id="ec2b5067-9542-41c4-97a8-ca64b5d54309" >
+		<http:listener doc:name="Listener" doc:id="3ab579a5-5032-4d3e-bb5f-ea8c4db36605" config-ref="HTTP_Listener_config" path="/transaction/{empid}/{empname}/{sal}"/>
+		<try doc:name="Try" doc:id="0c3e8dc9-c784-414a-9275-9f5a19d6dcaa" transactionalAction="ALWAYS_BEGIN">
+			<db:insert doc:name="Insert" doc:id="b8e0e244-560c-4b60-8ba6-56c9060c3686" config-ref="Database_Config">
+			<db:sql>insert into emp values (:empid,:empname,:sal)</db:sql>
+			<db:input-parameters><![CDATA[#[{
+	'empid':attributes.uriParams.empid as Number,
+	'empname':attributes.uriParams.empname as String,
+	'sal':attributes.uriParams.sal as String
+	
+	}]]]></db:input-parameters>
+		</db:insert>
+		</try>
+		<logger level="INFO" doc:name="Logger" doc:id="38fa2ed0-8e03-460d-8573-43ed8138b9c1" />
+	</flow>
+	<flow name="transactionModeFlow1" doc:id="36a57c4a-1fd6-4438-ac3b-d825350b7199" >
+		<http:listener doc:name="Listener" doc:id="82cb9f5c-a3a4-40d8-a49f-e892daa5ad57" config-ref="HTTP_Listener_config" path="/selectdistnctby"/>
+		<db:select doc:name="Select" doc:id="f183bcb2-f325-40e1-a975-6bffdd41610d" config-ref="Database_Config">
+			<db:sql >select * from emp</db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="aa6f40c8-80a8-450c-9bdf-b10668508ff1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload distinctBy $
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="b80bc8ac-ebd6-44fa-a5a2-6e41c5a3d4b4" />
+	</flow>
+</mule>

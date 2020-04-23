@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+	<vm:config name="VM_Config" doc:name="VM Config" doc:id="e5ddf2ed-ba96-4348-9c72-8c045acefa6d" >
+		<vm:queues >
+			<vm:queue queueName="Q1" />
+			<vm:queue queueName="Q2" />
+		</vm:queues>
+	</vm:config>
+	<flow name="publish" doc:id="b66ce784-7571-4067-a369-60e6b7c39574" >
+		<http:listener doc:name="Listener" doc:id="56edb9b0-7e82-45fb-a147-034b111cddfe" config-ref="HTTP_Listener_config" path="/publish"/>
+		<set-payload value="Hello Anil Gundra" doc:name="Set Payload" doc:id="02106cf5-bc84-4efa-b94a-28bb901421cb" />
+		<vm:publish doc:name="Publish" doc:id="aea3d8ac-0357-4f5c-bf50-f076dddfd511" queueName="Q1" sendCorrelationId="AUTO" config-ref="VM_Config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="41a1eff9-bd94-4622-a2a4-ab35f323f59b" />
+	</flow>
+	<flow name="consume1" doc:id="6b2ecc9b-1fe8-4968-8bba-20e795f452b1" >
+		<vm:listener doc:name="Listener" doc:id="5ce79b44-68c6-4fde-b1d5-b2cd9a13a23a" queueName="Q1" config-ref="VM_Config"/>
+		<set-payload value="myworld" doc:name="Set Payload" doc:id="2154ff00-a69f-4a95-b732-09fcfbc2bb51" />
+		<logger level="INFO" doc:name="Logger" doc:id="3b68ba83-2b5c-4c42-9190-28ea0affb94c" message="1 st consume"/>
+	</flow>
+	<flow name="publishconsume" doc:id="1721d4ba-2078-4f0c-ad35-f053d7a92a51" >
+		<http:listener doc:name="Listener" doc:id="cc408cb9-48ec-4786-a080-0252587a9c46" config-ref="HTTP_Listener_config" path="/publishconsume"/>
+		<set-payload value="Hello World" doc:name="Set Payload" doc:id="2c795905-ebc4-41d5-a0be-ec327c7dfbac" />
+		<vm:publish-consume queueName="Q2" doc:name="Publish consume" doc:id="786e4003-859f-48f1-ade6-bc1b5d9be568" config-ref="VM_Config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="ab0a25a8-1ba5-4837-b50d-171e37e9f994" />
+	</flow>
+	<flow name="pconsume1" doc:id="6c451952-db39-474f-85ee-87e867c70e1f" >
+		<vm:listener doc:name="Listener" doc:id="c11d024e-3e13-49ed-8230-5984ad114b98" queueName="Q2" config-ref="VM_Config"/>
+		<set-payload value="myworld" doc:name="Set Payload" doc:id="139ae6f9-a5f1-4bad-99a7-e62510892a52" />
+		<logger level="INFO" doc:name="Logger" doc:id="e199ef45-2cb1-4aeb-92af-13b0c01ace40" message="1 st pconsume"/>
+	</flow>
+</mule>

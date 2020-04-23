@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ibm-mq http://www.mulesoft.org/schema/mule/ibm-mq/current/mule-ibm-mq.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd">
+	<ibm-mq:config name="IBM_MQ_Config" doc:name="IBM MQ Config" doc:id="ce3fc99b-bd09-489a-af53-6490c1c41488" >
+		<ibm-mq:connection specification="JMS_1_1">
+			<ibm-mq:connection-mode >
+				<ibm-mq:client host="localhost" port="1416" queueManager="ACE" channel="SYSTEM.DEF.SVRCONN" />
+			</ibm-mq:connection-mode>
+		</ibm-mq:connection>
+	</ibm-mq:config>
+	<flow name="IBMMQFlow" doc:id="7d10ca01-2813-4db6-9853-20924e3fdf67" >
+		<ibm-mq:listener doc:name="On New Message" doc:id="44fb5893-2f47-430a-b472-7ed72f915626" config-ref="IBM_MQ_Config" destination="IN" numberOfConsumers="1"/>
+		<logger level="INFO" doc:name="Logger" doc:id="1c242a0c-1765-4d96-92a0-78e2b38ba5dd" />
+	</flow>
+	<flow name="Publish" doc:id="1fceb2be-1a13-435d-9547-612cc16beecf" >
+		<http:listener doc:name="Listener" doc:id="55c1310a-1869-42ef-a01a-1008aa05d3c4" config-ref="HTTP_Listener_config" path="/mqpublish"/>
+		<set-payload value="Hello World" doc:name="Set Payload" doc:id="49bada75-7a12-4978-8e02-71494a50468e" />
+		<ibm-mq:publish doc:name="Publish" doc:id="44633cc6-3641-46c3-9a3b-d9ad8b6b8943" config-ref="IBM_MQ_Config" destination="OUT"/>
+	</flow>
+	<flow name="consume" doc:id="e62562e6-4606-472b-a18a-3c45f5e6875b" >
+		<http:listener doc:name="Listener" doc:id="92485505-8f29-4dc3-ace0-75c5140069ce" config-ref="HTTP_Listener_config" path="/mqconsume"/>
+		<ibm-mq:consume doc:name="Consume" doc:id="17357bdc-ca96-4b78-848c-69d108c43663" config-ref="IBM_MQ_Config" destination="OUT"/>
+	</flow>
+</mule>

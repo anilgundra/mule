@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="72b9acdd-e8cf-4dae-93ec-7a26d02d7f49" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="b71d699c-65fe-4e0c-ab60-701585343f51" >
+		<http:request-connection protocol="HTTPS" host="ap17.salesforce.com" />
+	</http:request-config>
+	<flow name="salesforceoauthrestapiFlow" doc:id="0bbf60f1-142e-4765-b1da-31e7c3e7c50f" >
+		<http:listener doc:name="Listener" doc:id="863040c4-8fc1-42fb-8096-a158488055d5" config-ref="HTTP_Listener_config" path="/contact">
+			<http:response >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<http:request method="GET" doc:name="GenerateToken" doc:id="11923e63-6a82-4e4a-a64e-62bbe99367ed" config-ref="HTTP_Request_configuration" path="/services/oauth2/token">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Content-Type" : "application/x-www-form-urlencoded"
+}]]]></http:headers>
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	password : 143@ammaoVx5lt1sIwQqnWZwwJasfau6,
+	grant_type : password,
+	client_secret : 68A6C83A5678A35BCE6FD1C415B03EFBF71C1E0CB465CCA020E233FF4A7B8DEC,
+	client_id : 3MVG97quAmFZJfVyNAebsoOMwIJePPYd.foxpoETub6knLcz.lz4MctwI61KfJX4Ttv6BaHOJRN67ueJmcA5m,
+	username : anil.gundra@gmail.com
+}]]]></http:query-params>
+		</http:request>
+	</flow>
+</mule>

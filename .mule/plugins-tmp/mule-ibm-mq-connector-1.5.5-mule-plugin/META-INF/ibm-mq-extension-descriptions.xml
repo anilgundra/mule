@@ -1,0 +1,727 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension-documentation>
+    <configs>
+        <config name="config">
+            <description><![CDATA[Default configuration]]></description>
+            <parameters>
+                <parameter name="encoding">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="contentType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="sendCorrelationId">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="expirationPolicy">
+                    <description><![CDATA[Configures the minimum amount of time that a dynamic configuration instance can remain idle before the runtime considers it eligible for expiration. This does not mean that the platform will expire the instance at the exact moment that it becomes eligible. The runtime will actually purge the instances when it sees it fit.]]></description>
+                </parameter>
+                <parameter name="ackMode">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="consumerType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="selector">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="persistentDelivery">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="priority">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeToLive">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeToLiveUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="disableMessageId">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="disableMessageTimestamp">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="deliveryDelay">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="deliveryDelayUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="jmsType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+            </parameters>
+        </config>
+    </configs>
+    <connections>
+        <connection name="connection">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="connectionMode">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="username">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="password">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="clientId">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="cssId">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="additionalProperties">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="cachingStrategy">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="enableXa">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="specification">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="targetClient">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="applicationName">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="readMessageDescriptor">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="writeMessageDescriptor">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="messageContext">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="temporaryModel">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="temporalQueuePrefix">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="temporalTopicPrefix">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="receiveExitHandler">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="receiveExitHandlerInit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="sendExitHandler">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="sendExitHandlerInit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="securityExitHandler">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="securityExitHandlerInit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="minPoolSize">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="maxPoolSize">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="maxIdleSeconds">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="cipherSuiteMapping">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="cipherSuite">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="tlsContextFactory">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="resetCount">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="peerName">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="fipsRequired">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="certStores">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="reconnection">
+                    <description><![CDATA[When the application is deployed, a connectivity test is performed on all connectors. If set to true, deployment will fail if the test doesn't pass after exhausting the associated reconnection strategy]]></description>
+                </parameter>
+            </parameters>
+        </connection>
+    </connections>
+    <extension name="IBM MQ">
+        <description><![CDATA[This is the main class of an extension, is the entry point from which configurations, connection providers, operations and sources are going to be declared.]]></description>
+        <parameters/>
+    </extension>
+    <operations>
+        <operation name="consume">
+            <description><![CDATA[Operation that allows the user to consume a single Message from a given Destination.]]></description>
+            <parameters>
+                <parameter name="destination">
+                    <description><![CDATA[the name of the Destination from where the Message should be consumed]]></description>
+                </parameter>
+                <parameter name="consumerType">
+                    <description><![CDATA[the type of the MessageConsumer that is required for the given destination, along with any extra configurations that are required based on the destination type.]]></description>
+                </parameter>
+                <parameter name="ackMode">
+                    <description><![CDATA[the ConsumerAckMode that will be configured over the Message and Session]]></description>
+                </parameter>
+                <parameter name="selector">
+                    <description><![CDATA[a custom JMS selector for filtering the messages]]></description>
+                </parameter>
+                <parameter name="maximumWait">
+                    <description><![CDATA[maximum time to wait for a message before timing out]]></description>
+                </parameter>
+                <parameter name="maximumWaitUnit">
+                    <description><![CDATA[Time unit to be used in the maximumWaitTime configurations]]></description>
+                </parameter>
+                <parameter name="transactionalAction">
+                    <description><![CDATA[The type of joining action that operations can take regarding transactions.]]></description>
+                </parameter>
+                <parameter name="contentType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="encoding">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="target">
+                    <description><![CDATA[The name of a variable on which the operation's output will be placed]]></description>
+                </parameter>
+                <parameter name="targetValue">
+                    <description><![CDATA[An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable]]></description>
+                </parameter>
+                <parameter name="reconnectionStrategy">
+                    <description><![CDATA[A retry strategy in case of connectivity errors]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+        <operation name="publish">
+            <description><![CDATA[Operation that allows the user to send a Message to a JMS Destination]]></description>
+            <parameters>
+                <parameter name="destination">
+                    <description><![CDATA[the name of the Destination where the Message should be sent]]></description>
+                </parameter>
+                <parameter name="destinationType">
+                    <description><![CDATA[the MQDestinationType of the destination]]></description>
+                </parameter>
+                <parameter name="transactionalAction">
+                    <description><![CDATA[Transactional Action for the operation. Indicates if the publish must be executed or not in a transaction.]]></description>
+                </parameter>
+                <parameter name="sendCorrelationId">
+                    <description><![CDATA[options on whether to include an outbound correlation id or not]]></description>
+                </parameter>
+                <parameter name="body">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="jmsType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="correlationId">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="sendContentType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="outboundContentType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="sendEncoding">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="outboundEncoding">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="replyTo">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="properties">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="jmsxProperties">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="persistentDelivery">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="priority">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeToLive">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeToLiveUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="disableMessageId">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="disableMessageTimestamp">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="deliveryDelay">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="deliveryDelayUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="target">
+                    <description><![CDATA[The name of a variable on which the operation's output will be placed]]></description>
+                </parameter>
+                <parameter name="targetValue">
+                    <description><![CDATA[An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable]]></description>
+                </parameter>
+                <parameter name="reconnectionStrategy">
+                    <description><![CDATA[A retry strategy in case of connectivity errors]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+        <operation name="publishConsume">
+            <description><![CDATA[Operation that allows the user to send a message to a JMS Destination and waits for a response either to the provided ReplyTo destination or to a temporary Destination created dynamically]]></description>
+            <parameters>
+                <parameter name="destination">
+                    <description><![CDATA[the name of the Destination where the Message should be sent]]></description>
+                </parameter>
+                <parameter name="requestReplyPattern">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="sendCorrelationId">
+                    <description><![CDATA[options on whether to include an outbound correlation id or not]]></description>
+                </parameter>
+                <parameter name="body">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="jmsType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="correlationId">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="sendContentType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="outboundContentType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="sendEncoding">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="outboundEncoding">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="replyTo">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="properties">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="jmsxProperties">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="persistentDelivery">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="priority">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeToLive">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeToLiveUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="disableMessageId">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="disableMessageTimestamp">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="deliveryDelay">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="deliveryDelayUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="ackMode">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="maximumWait">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="maximumWaitUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="inboundContentType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="inboundEncoding">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="target">
+                    <description><![CDATA[The name of a variable on which the operation's output will be placed]]></description>
+                </parameter>
+                <parameter name="targetValue">
+                    <description><![CDATA[An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable]]></description>
+                </parameter>
+                <parameter name="reconnectionStrategy">
+                    <description><![CDATA[A retry strategy in case of connectivity errors]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+        <operation name="ack">
+            <description><![CDATA[Allows the user to perform an ACK when the AckMode#MANUAL mode is elected while consuming the Message. As per JMS Spec, performing an ACK over a single Message automatically works as an ACK for all the Messages produced in the same JmsSession.]]></description>
+            <parameters>
+                <parameter name="ackId">
+                    <description><![CDATA[The AckId of the Message to ACK]]></description>
+                </parameter>
+                <parameter name="target">
+                    <description><![CDATA[The name of a variable on which the operation's output will be placed]]></description>
+                </parameter>
+                <parameter name="targetValue">
+                    <description><![CDATA[An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+        <operation name="recoverSession">
+            <description><![CDATA[Allows the user to perform a session recover when the AckMode#MANUAL mode is elected while consuming the Message. As per JMS Spec, performing a session recover automatically will redeliver all the consumed messages that had not being acknowledged before this recover.]]></description>
+            <parameters>
+                <parameter name="ackId">
+                    <description><![CDATA[The AckId of the Message Session to recover]]></description>
+                </parameter>
+                <parameter name="target">
+                    <description><![CDATA[The name of a variable on which the operation's output will be placed]]></description>
+                </parameter>
+                <parameter name="targetValue">
+                    <description><![CDATA[An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+    </operations>
+    <sources>
+        <source name="listener">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="destination">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="consumerType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="ackMode">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="selector">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="numberOfConsumers">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="transactionalAction">
+                    <description><![CDATA[The type of beginning action that sources can take regarding transactions.]]></description>
+                </parameter>
+                <parameter name="transactionType">
+                    <description><![CDATA[The type of transaction to create. Availability will depend on the runtime version.]]></description>
+                </parameter>
+                <parameter name="primaryNodeOnly">
+                    <description><![CDATA[Whether this source should only be executed on the primary node when runnning in Cluster]]></description>
+                </parameter>
+                <parameter name="redeliveryPolicy">
+                    <description><![CDATA[Defines a policy for processing the redelivery of the same message]]></description>
+                </parameter>
+                <parameter name="contentType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="encoding">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="reconnectionStrategy">
+                    <description><![CDATA[A retry strategy in case of connectivity errors]]></description>
+                </parameter>
+                <parameter name="body">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="jmsType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="correlationId">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="sendContentType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="outboundContentType">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="sendEncoding">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="outboundEncoding">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="replyTo">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="properties">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="jmsxProperties">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="persistentDelivery">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="priority">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeToLive">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeToLiveUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="disableMessageId">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="disableMessageTimestamp">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="deliveryDelay">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="deliveryDelayUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="sendCorrelationId">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="requestReplyPattern">
+                    <description><![CDATA[]]></description>
+                </parameter>
+            </parameters>
+        </source>
+    </sources>
+    <types>
+        <type name="com.mulesoft.connectors.ibmmq.api.MQJmsDestination">
+            <description><![CDATA[Representation of a Destination that contains it's identifier name
+ and kind of Destination
+
+ @since 1.0]]></description>
+            <parameters>
+                <parameter name="destination">
+                    <description><![CDATA[The name that identifies the destination where a message should be sent]]></description>
+                </parameter>
+                <parameter name="destinationType">
+                    <description><![CDATA[The type of this destination]]></description>
+                </parameter>
+            </parameters>
+        </type>
+        <type name="com.mulesoft.connectors.ibmmq.api.MQJmsxProperties">
+            <description><![CDATA[IBM MQ implementation of JmsxProperties
+
+ @since 1.0]]></description>
+            <parameters>
+                <parameter name="jmsxUserID">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="jmsxAppID">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="jmsxDeliveryCount">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="jmsxGroupID">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="jmsxGroupSeq">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="jmsxProducerTXID">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="jmsxConsumerTXID">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="jmsxRcvTimestamp">
+                    <description><![CDATA[]]></description>
+                </parameter>
+            </parameters>
+        </type>
+        <type name="com.mulesoft.connectors.ibmmq.api.connection.cache.MQCachingStrategy">
+            <description><![CDATA[]]></description>
+            <parameters/>
+        </type>
+        <type name="com.mulesoft.connectors.ibmmq.api.connection.cache.MQDefaultCachingStrategy">
+            <description><![CDATA[DefaultCachingStrategy
+
+ @since 1.0]]></description>
+            <parameters>
+                <parameter name="sessionCacheSize">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="cacheProducers">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="cacheConsumers">
+                    <description><![CDATA[]]></description>
+                </parameter>
+            </parameters>
+        </type>
+        <type name="com.mulesoft.connectors.ibmmq.api.connection.cache.NoCachingConfiguration">
+            <description><![CDATA[MQCachingStrategy which doesn't do caching.
+
+ @since 1.0]]></description>
+            <parameters/>
+        </type>
+        <type name="com.mulesoft.connectors.ibmmq.api.connection.mode.BindingConnectionMode">
+            <description><![CDATA[Connection mode where the IBM MQ Client automatically connects to the IBM MQ Server running the same system.
+
+ @since 1.0]]></description>
+            <parameters>
+                <parameter name="queueManager">
+                    <description><![CDATA[The Queue Manager name]]></description>
+                </parameter>
+            </parameters>
+        </type>
+        <type name="com.mulesoft.connectors.ibmmq.api.connection.mode.ClientConnectionMode">
+            <description><![CDATA[Connection mode where the IBM MQ JMS Client connects to the queue manager over TCP/IP.
+ <p>
+ This connection mode can be used to connect to brokers in the same machine or remote ones.
+
+ @since 1.0]]></description>
+            <parameters>
+                <parameter name="host">
+                    <description><![CDATA[Host where the IBM MQ Broker is.]]></description>
+                </parameter>
+                <parameter name="port">
+                    <description><![CDATA[Queue Manager listener port]]></description>
+                </parameter>
+                <parameter name="queueManager">
+                    <description><![CDATA[The queue manager which is used when selecting a channel definition.]]></description>
+                </parameter>
+                <parameter name="channel">
+                    <description><![CDATA[Name of the channel to connect to.]]></description>
+                </parameter>
+                <parameter name="connectionNameList">
+                    <description><![CDATA[hosts to which the client will attempt to reconnect to after its connection is broken. The connection name list
+ is a comma separated list of host/ip port pairs.]]></description>
+                </parameter>
+            </parameters>
+        </type>
+        <type name="com.mulesoft.connectors.ibmmq.api.connection.mode.MQConnectionMode">
+            <description><![CDATA[Strategy interface of connection modes for an IBM MQ Broker.
+
+ @since 1.0]]></description>
+            <parameters/>
+        </type>
+        <type name="com.mulesoft.connectors.ibmmq.api.consumer.MQConsumerConfig">
+            <description><![CDATA[Parameter Group of common consumer configurations.
+
+ @since 1.0]]></description>
+            <parameters>
+                <parameter name="ackMode">
+                    <description><![CDATA[The Message
+ Can be overridden at the message source level.
+ This attribute has to be IMMEDIATE if transactionType is LOCAL or MULTI]]></description>
+                </parameter>
+                <parameter name="consumerType">
+                    <description><![CDATA[The Message
+ Can be overridden at the message source level.]]></description>
+                </parameter>
+                <parameter name="selector">
+                    <description><![CDATA[Default selector to be used for filtering when consuming a Message
+ Can be overridden at the message source level.]]></description>
+                </parameter>
+            </parameters>
+        </type>
+        <type name="com.mulesoft.connectors.ibmmq.api.consumer.MQConsumerType">
+            <description><![CDATA[A simple interface inheritance to prevent JMS Commons to be exported.
+
+ @since 1.0]]></description>
+            <parameters/>
+        </type>
+        <type name="com.mulesoft.connectors.ibmmq.api.consumer.MQQueueConsumer">
+            <description><![CDATA[]]></description>
+            <parameters/>
+        </type>
+        <type name="com.mulesoft.connectors.ibmmq.api.consumer.MQTopicConsumer">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="durable">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="shared">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="noLocal">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="subscriptionName">
+                    <description><![CDATA[]]></description>
+                </parameter>
+            </parameters>
+        </type>
+        <type name="com.mulesoft.connectors.ibmmq.api.publisher.MQProducerConfig">
+            <description><![CDATA[JmsProducerConfig implementation for IBM MQ.
+
+ @since 1.0]]></description>
+            <parameters>
+                <parameter name="persistentDelivery">
+                    <description><![CDATA[Sets the default value for the Message#getJMSDeliveryMode.
+ If DeliveryMode#PERSISTENT mode will be used,
+ which instructs the JMS provider to take extra care to insure the message
+ is not lost in transit due to a JMS provider failure.]]></description>
+                </parameter>
+                <parameter name="priority">
+                    <description><![CDATA[Defines the default Message#getJMSPriority to use when sending messages]]></description>
+                </parameter>
+                <parameter name="timeToLive">
+                    <description><![CDATA[Defines the default time the message will be in the broker before it expires and is discarded]]></description>
+                </parameter>
+                <parameter name="timeToLiveUnit">
+                    <description><![CDATA[A #timeToLive attribute.
+ <p>
+ Defaults to MILLISECONDS]]></description>
+                </parameter>
+                <parameter name="disableMessageId">
+                    <description><![CDATA[Defines the default value to use when producing messages,
+ for disabling the Message#getJMSMessageID generation in the broker.
+ Depending on the provider it may or may not have effect]]></description>
+                </parameter>
+                <parameter name="disableMessageTimestamp">
+                    <description><![CDATA[Defines the default value to use, when producing messages,
+ for disable Message#getJMSTimestamp generation in the broker.
+ Depending on the provider it may or may not have effect.]]></description>
+                </parameter>
+                <parameter name="deliveryDelay">
+                    <description><![CDATA[This is used to determine the Message delivery delay time which is
+ calculated by adding the deliveryDelay value specified on the
+ send method to the time the message was sent.
+ <p>
+ Only used in JmsSpecification#JMS_2_0]]></description>
+                </parameter>
+                <parameter name="deliveryDelayUnit">
+                    <description><![CDATA[A #deliveryDelay attribute.
+ <p>
+ Defaults to MILLISECONDS]]></description>
+                </parameter>
+                <parameter name="jmsType">
+                    <description><![CDATA[A message JMSType identifier supplied by a client when a message is sent.]]></description>
+                </parameter>
+            </parameters>
+        </type>
+    </types>
+</extension-documentation>

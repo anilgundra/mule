@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="choiceflow" doc:id="6f39a0a7-1b72-4689-991e-069c107a9985" >
+		<choice doc:name="Choice" doc:id="22227ae7-cd37-43a3-9d30-0b8a78dfee30" >
+			<when expression="#[payload == 'payload_1']">
+				<flow-ref doc:name="Flow Reference" doc:id="6c577ec2-394d-4a4a-9a06-bf0c654ba1b9" name="subflow_1"/>
+			</when>
+			<otherwise >
+				<flow-ref doc:name="Flow Reference" doc:id="b75de827-e936-48b1-b1d1-66cff52ea05f" name="subflow_2"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<sub-flow name="subflow_1" doc:id="925ab3f2-e114-43b3-af7e-fd62478b5d5c" >
+		<set-variable value="it's my payload" doc:name="Set Variable" doc:id="2b09ff93-9e15-4d69-bdc8-2d3d1ebceb51" variableName="myvariable"/>
+	</sub-flow>
+	<sub-flow name="subflow_2" doc:id="b1253ebd-e337-4255-8420-3048febbbb49" >
+		<set-variable value="it's other payload" doc:name="Set Variable" doc:id="9eb431a1-db7d-404e-a22d-22e15978299e" variableName="myvariable"/>
+	</sub-flow>
+	<flow name="MunitFlow" doc:id="a9cee2eb-e93f-44c8-b9c6-e8111da72572" >
+		<http:listener doc:name="Listener" doc:id="607bbf2f-38f5-4207-b75c-3d97e03ef493" config-ref="HTTP_Listener_config" path="/munit/{payload}"/>
+		<set-payload value="#['dummy']" doc:name="Set Payload" doc:id="9fc83642-f278-4a49-8592-f41a2085c624" name="dummy"/>
+		<set-payload value="#[attributes.uriParams.payload]" doc:name="Set Payload" doc:id="e0e38a83-967e-42f9-9347-371a9129db61" name="setp" />
+		<flow-ref doc:name="Flow Reference" doc:id="0cc0bb49-5bd7-4247-937d-82534d0ac515" name="choiceflow"/>
+		<choice doc:name="Choice" doc:id="364b46a2-7441-40eb-8fa7-9f0b550c75ea" >
+			<when expression="#[vars.myvariable == 'it\'s my payload']">
+				<set-payload value="response to my payload_1" doc:name="Set Payload" doc:id="78ce36d8-d250-4c91-b83e-cecc32eb2f09" />
+			</when>
+			<otherwise >
+				<set-payload value="response to other payloads" doc:name="Set Payload" doc:id="fc3a707f-6545-4078-87ba-d252078e59c7" />
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

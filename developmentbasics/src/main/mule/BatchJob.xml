@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<flow name="BatchJobFlow" doc:id="df17c8f1-1b6c-488b-8db7-4ff18aa89dd9" >
+		<http:listener doc:name="Listener" doc:id="eaa9f39e-78f7-4a45-a840-d969b0097666" config-ref="HTTP_Listener_config" path="/batch"/>
+		<ee:transform doc:name="Transform Message" doc:id="d035d938-f9ea-43a8-8371-983423806ca2" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+//payload.^raw
+ [1,2,3,4,"a",6,7,"b",9,10,
+11,12,13,14,15,"c",17,18,19,20,
+] ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<batch:job jobName="BatchJobBatch_Job" doc:id="1822b3df-4c6c-47fe-a331-4c4837985246" maxFailedRecords="20" blockSize="10">
+			<batch:process-records >
+				<batch:step name="IsEven" doc:id="85a4f892-7c2d-46b2-ab59-534440825cbf" acceptExpression="#[(payload mod 2) == 0]">
+					<logger level="INFO" doc:name="Logger" doc:id="b26b7a6c-a9e9-4c75-af77-5e1ed58483f5" message="#[payload.^raw]"/>
+					<batch:aggregator doc:name="Batch Aggregator" doc:id="dfe5c897-d885-421a-8e3c-d8984f791e5d" size="25">
+						<logger level="INFO" doc:name="Logger" doc:id="41a68a2b-a2ba-4d54-8025-483d11f32526" message="#[payload]"/>
+					</batch:aggregator>
+				</batch:step>
+				<batch:step name="IsOdd" doc:id="1efd03da-5343-40d6-ab97-1e70b98068f0" acceptExpression="#[(payload mod 3) == 0]">
+					<logger level="INFO" doc:name="Logger" doc:id="7b16c7aa-1637-40ff-b6d4-1937d540be12" />
+					<batch:aggregator doc:name="Batch Aggregator" doc:id="7aef4536-802a-4730-aac9-ac92e5152159" size="30">
+						<db:bulk-insert doc:name="Bulk insert" doc:id="6f94a948-83ac-4d03-9484-2f81a65f61e1" config-ref="Database_Config">
+							<db:bulk-input-parameters ><![CDATA[#[payload map{
+	VAL2:$ as String
+}]]]></db:bulk-input-parameters>
+							<db:sql > insert into MULETEST (VAL2) values (:VAL2)</db:sql>
+						</db:bulk-insert>
+					</batch:aggregator>
+				</batch:step>
+				<batch:step name="Failed" doc:id="c21b5efe-f082-4ebd-bc3e-3ea95fced0ad" acceptPolicy="ONLY_FAILURES">
+					<logger level="INFO" doc:name="Logger" doc:id="54581161-8e08-4c8f-b5e7-07542e9300d7" />
+					<batch:aggregator doc:name="Batch Aggregator" doc:id="d34478d1-9444-4a4e-9c2f-504060490c15" streaming="true">
+						<logger level="INFO" doc:name="Logger" doc:id="56c08caf-01d8-4be8-a6a0-f8ea888f2927" />
+					</batch:aggregator>
+				</batch:step>
+			</batch:process-records>
+			<batch:on-complete >
+				<logger level="INFO" doc:name="Logger" doc:id="a83dbf3b-760f-4a75-852a-3d6df953468e" message="#['failed records' ++ payload.processedRecords]"/>
+			</batch:on-complete>
+		</batch:job>
+	</flow>
+	<flow name="BatchJobFlow1" doc:id="b3efb9b1-5a49-478c-b0df-f2fb1291acd9" >
+		<http:listener doc:name="Listener" doc:id="32654d65-0fb1-4c25-9993-5ed3ab780949" config-ref="HTTP_Listener_config" path="/delete/{tablename}"/>
+		<db:delete doc:name="Delete" doc:id="cbbf8f6a-1599-49b4-9495-d52d8ec99def" config-ref="Database_Config">
+			<db:sql >#['delete from ' ++ (attributes.uriParams.tablename) as String]</db:sql>
+		</db:delete>
+		<logger level="INFO" doc:name="Logger" doc:id="03250103-74df-4541-93f2-26815d62e3a5" />
+	</flow>
+</mule>

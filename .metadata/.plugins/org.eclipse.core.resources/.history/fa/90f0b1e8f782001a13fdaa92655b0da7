@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="fb918198-8400-4088-8528-dd70738491b1" file="secure.properties" key="mulesoft" >
+		<secure-properties:encrypt algorithm="DES" />
+	</secure-properties:config>
+	<flow name="securePropertiesFlow" doc:id="28d8e0b6-1e87-421e-97b7-3c30842baad6" >
+		<http:listener doc:name="Listener" doc:id="d75eeb6b-6dc0-4b12-937b-93289dd7e46d" config-ref="HTTP_Listener_config" path="/encrypt"/>
+		<set-payload value="#[p('secure::me.myname')]" doc:name="Set Payload" doc:id="7e3fd58b-fb76-43a1-b633-576871cfff3b" />
+	</flow>
+</mule>

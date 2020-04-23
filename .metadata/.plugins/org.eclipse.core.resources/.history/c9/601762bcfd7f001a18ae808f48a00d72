@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<salesforce:sfdc-config name="Salesforce_Config2" doc:name="Salesforce Config" doc:id="1913acfd-e554-4d9b-87f3-0acd265b03f3" >
+		<salesforce:cached-basic-connection username="anil.gundra@gmail.com" password="143@amma" securityToken="oVx5lt1sIwQqnWZwwJasfau6" />
+	</salesforce:sfdc-config>
+	<flow name="queryRecordFlow" doc:id="192ceedf-5f3f-4d9e-8a16-7646bbf38042" >
+		<http:listener doc:name="Listener" doc:id="4e9d3be7-c18d-4faa-b240-68b61a725dc6" config-ref="HTTP_Listener_config" path="/salesforcequery">
+			<http:response >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<salesforce:query-all doc:name="Query all" doc:id="2aacc07f-8034-4ede-a97f-5401ed708b2c" config-ref="Salesforce_Config2">
+			<salesforce:salesforce-query >select Name,BillingAddress from Account</salesforce:salesforce-query>
+		</salesforce:query-all>
+		<logger level="INFO" doc:name="Logger" doc:id="418f7f23-374c-44e4-a074-672f89c7a2d3" />
+	</flow>
+</mule>

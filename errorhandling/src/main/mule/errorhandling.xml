@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="32bb9b3d-1d87-439d-bc77-fa938d834d6a" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="c6099e17-b4cd-4ef2-a10e-6dc37d25aaaf" />
+	<flow name="validateandtranform" doc:id="239e002c-d4bf-439b-96d1-af1aca2bfd23" >
+		<validation:is-true doc:name="Is true" doc:id="8efae551-9fa8-491b-8dd5-6615d429b3b4" config-ref="Validation_Config" expression="#[['HP','APPLE','123'] contains   vars.pname]">
+			<error-mapping sourceType="EXPRESSION" targetType="APP:ANILERROR" />
+			<error-mapping sourceType="VALIDATION:INVALID_BOOLEAN" targetType="APP:CASTEXCEPTION" />
+		</validation:is-true>
+		<ee:transform doc:name="Transform Message" doc:id="8148bdc9-5912-40f0-a428-3fc1720a1bce" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+vars.pname]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="3e4b48f7-dd70-4ad1-9672-dbb03ddb6309" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/java
+---
+isAlpha(payload)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<flow-ref doc:name="GetProductsbyPname" doc:id="49b5a697-1e3f-4590-af44-38d2333024c0" name="getproductdescription" />
+		<raise-error doc:name="Raise error" doc:id="94214242-d5ba-4f78-b789-9c9f038b22b1" type="APP:ANILERROR" description="this is my exception" />
+		<logger level="INFO" doc:name="Logger" doc:id="6f9eb395-e9d7-46a2-a725-573f6fc6a7bf" message="validate flow"/>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="558d6df7-bc38-4b91-8cf5-d2b7e6a20950" type="APP:CASTEXCEPTION" when="error.exception.detailMessage contains 'Value was expected to be true but it was false instead'">
+				<logger level="INFO" doc:name="Logger" doc:id="85963084-88b1-406a-9ecf-ea2dfa5c0f9e" message="error in validate flow" />
+			</on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="a85f324e-81e4-4f76-acfb-5fcc6cd3075c" when="error.exception.detailMessage contains 'Cannot coerce'">
+				<logger level="INFO" doc:name="Logger" doc:id="6e7ca61b-3cc7-4d96-becf-9121242a8916" />
+			</on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="fd1067fe-f509-4a8c-a658-65dedd0c64c5" when="error.description contains 'this is my exception'" type="APP:ANILERROR">
+				<logger level="INFO" doc:name="Logger" doc:id="2ce2cb8f-4768-404c-ae49-657dac7d1d24" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="Main" doc:id="93db5d37-4481-41a3-bf94-f17f2773aecb" >
+		<http:listener doc:name="Listener" doc:id="1f28e78a-c4e8-47e5-8edc-90cb999cedcb" path="/error" config-ref="HTTP_Listener_config">
+			<http:response>
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:response>
+			<http:error-response>
+				<http:body ><![CDATA[#[output application/json --- error.errorType]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-variable value="#[attributes.queryParams.pname]" doc:name="Set Variable" doc:id="ecffbe80-fb2e-462d-b3c5-42fcb2457679" variableName="pname"/>
+		<flow-ref doc:name="validateReference" doc:id="d64677d4-8bf7-4e9a-896f-5e68c3da7085" name="validateandtranform"/>
+		<logger level="INFO" doc:name="Logger" doc:id="35359178-cbb8-42c1-8254-d5815a03e46d" message="end of main flow" />
+	</flow>
+	<flow name="getproductdescription" doc:id="b8068a99-cf6e-45f5-ac90-4d21b6298cf1">
+		<logger level="INFO" doc:name="Logger" doc:id="145353e3-32d9-44f1-9af2-4979f7bd98ff" message="get product sub flow" />
+	</flow>
+</mule>

@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="productjson" format="json">
+      <types:shape format="weave" example="examples/productSingle.json"><![CDATA[%dw 2.0
+
+type productjson = {|
+  productId: Number {"typeId": "int"}, 
+  name: String, 
+  description: String, 
+  originalPrice: Number {"typeId": "int"}, 
+  offer: {|
+    offerPrice: Number {"typeId": "int"}, 
+    offerValidUntil: Number {"typeId": "double"}
+  |}, 
+  brandName: String, 
+  images: Array<String>
+|} {"example": "{\\\"productId\\\":1,\\\"name\\\":\\\"Hp Pavilion laptop\\\",\\\"description\\\":\\\"Hp Laptop \\\",\\\"originalPrice\\\":1000,\\\"offer\\\":{\\\"offerPrice\\\":1000,\\\"offerValidUntil\\\":1467105373745},\\\"brandName\\\":\\\"HP\\\",\\\"images\\\":[\\\"image1.jpeg\\\",\\\"image2.jpeg\\\",\\\"image3.jpeg\\\"]}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="username" format="json">
+      <types:shape format="weave" example="examples/username.json"><![CDATA[%dw 2.0
+
+type username = {|
+  Root: {|
+    user_firstname: String, 
+    user_lastname: String
+  |}
+|} {"example": "{\\\"Root\\\":{\\\"user_firstname\\\":\\\"anil\\\",\\\"user_lastname\\\":\\\"gundra\\\"}}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="complexProduct" format="json">
+      <types:shape format="weave" example="examples/products.json"><![CDATA[%dw 2.0
+
+type complexProduct = Array<{|  productId: Number {"typeId": "int"},   name: String,   description: String,   originalPrice: Number {"typeId": "int"},   offer: {|    offerPrice: Number {"typeId": "int"},     offerValidUntil: Number {"typeId": "double"}  |},   brandName: String,   images: Array<String>
+|}> {"example": "[{\\\"productId\\\":1,\\\"name\\\":\\\"Hp Pavilion laptop\\\",\\\"description\\\":\\\"Hp Laptop \\\",\\\"originalPrice\\\":1000,\\\"offer\\\":{\\\"offerPrice\\\":1000,\\\"offerValidUntil\\\":1467105373745},\\\"brandName\\\":\\\"HP\\\",\\\"images\\\":[\\\"image1.jpeg\\\",\\\"image2.jpeg\\\",\\\"image3.jpeg\\\"]},{\\\"productId\\\":2,\\\"name\\\":\\\"Macbook Pro laptop\\\",\\\"description\\\":\\\"Apple Laptop \\\",\\\"originalPrice\\\":3000,\\\"offer\\\":{\\\"offerPrice\\\":3000,\\\"offerValidUntil\\\":1467105374471},\\\"brandName\\\":\\\"Apple\\\",\\\"images\\\":[\\\"image3.jpeg\\\",\\\"image4.jpeg\\\",\\\"image5.jpeg\\\"]},{\\\"productId\\\":3,\\\"name\\\":\\\"Mac Book  laptop\\\",\\\"description\\\":\\\"Apple Laptop \\\",\\\"originalPrice\\\":2000,\\\"offer\\\":{\\\"offerPrice\\\":2000,\\\"offerValidUntil\\\":1467105374474},\\\"brandName\\\":\\\"Apple\\\",\\\"images\\\":[\\\"image6.jpeg\\\",\\\"image7.jpeg\\\",\\\"image8.jpeg\\\"]},{\\\"productId\\\":4,\\\"name\\\":\\\"IBM laptop\\\",\\\"description\\\":\\\"IBM Laptop \\\",\\\"originalPrice\\\":4000,\\\"offer\\\":{\\\"offerPrice\\\":4000,\\\"offerValidUntil\\\":1467105374477},\\\"brandName\\\":\\\"IBM\\\",\\\"images\\\":[\\\"image9.jpeg\\\",\\\"image10.jpeg\\\",\\\"image11.jpeg\\\"]},{\\\"productId\\\":5,\\\"name\\\":\\\"MotoX Mobile\\\",\\\"description\\\":\\\"Motorola Mobile \\\",\\\"originalPrice\\\":1000,\\\"offer\\\":{\\\"offerPrice\\\":1000,\\\"offerValidUntil\\\":1467105374480},\\\"brandName\\\":\\\"Motorola\\\",\\\"images\\\":[\\\"image12.jpeg\\\",\\\"image13.jpeg\\\",\\\"image14.jpeg\\\"]},{\\\"productId\\\":6,\\\"name\\\":\\\"Samsung Note 5\\\",\\\"description\\\":\\\"Samsung Mobile \\\",\\\"originalPrice\\\":5000,\\\"offer\\\":{\\\"offerPrice\\\":5000,\\\"offerValidUntil\\\":1467105374482},\\\"brandName\\\":\\\"Samsung\\\",\\\"images\\\":[\\\"image15.jpeg\\\",\\\"image16.jpeg\\\",\\\"image17.jpeg\\\"]}]"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="productXML" format="xml">
+      <types:example format="xml" element="{http://way2learnonline.com/domain}products" location="examples/products.xml"/>
+    </types:type>
+    <types:type name="productsObj" format="java">
+      <types:shape format="raml"><![CDATA[#%RAML 1.0 DataType
+type: string]]></types:shape>
+    </types:type>
+    <types:type name="match" format="json">
+      <types:shape format="weave" example="examples/matchExample-1.json"><![CDATA[%dw 2.0
+
+type match = {|
+  name: String, 
+  mobile: Number {"typeId": "double"}, 
+  mail: String
+|} {"example": "{\\\"name\\\":\\\"anil\\\",\\\"mobile\\\":9059334489,\\\"mail\\\":\\\"anil.gundra@gmail.com\\\"}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#7c76c8b7-bf8e-4b4d-996a-1c7932680907">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="productjson"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#7270daed-8645-4e0d-84cb-85aad3784f13"/>
+  <types:enrichment select="#5d6b2f64-488b-4645-9b5d-dcc2e4d4b7ae">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="complexProduct"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#9663df48-7f8f-49dc-be15-c02d31fb721a">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="productXML"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#72696232-fd60-4710-887a-b8857a257865">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="match"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#fe0ff82c-eabc-4ca3-9c88-e1f3f3c51e7e">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="productXML"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

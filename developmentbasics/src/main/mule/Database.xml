@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:american-flights-api="http://www.mulesoft.org/schema/mule/american-flights-api" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/american-flights-api http://www.mulesoft.org/schema/mule/american-flights-api/current/mule-american-flights-api.xsd">
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="7f0d1da2-94ef-4dfd-a113-320c04620efb" >
+		<db:oracle-connection host="localhost" user="master" password="12345" />
+	</db:config>
+	<flow name="DynamicSelectWithEMPNO" doc:id="9e37c751-a1fa-42d3-899e-aa12fb8f2a9d" >
+		<http:listener doc:name="Listener" doc:id="66e03e4f-4127-4116-b031-5188b2cdb36b" config-ref="HTTP_Listener_config" path="/select/{EMPNO}" outputMimeType="application/json">
+			<http:response >
+				<http:body ><![CDATA[#[%dw 2.0
+output application/json
+---
+payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<set-payload value='#[%dw 2.0
+output application/json
+---
+if(attributes.method == "POST") payload else {"TABLENAME":"EMP"}]' doc:name="Set Payload" doc:id="14badd53-5e0b-4d91-9142-59131fddd624" />
+		<set-variable value='#[payload.TABLENAME]' doc:name="Set Variable" doc:id="defd13ec-dae8-4bec-b5cf-e76675872f91" variableName="table"/>
+		<db:select doc:name="Select" doc:id="db062569-d0d7-42fa-8b36-7049b803286f" config-ref="Database_Config">
+			<db:sql >#[&quot;SELECT * FROM $(vars.table) WHERE EMPNO = :EMPNO&quot;]</db:sql>
+			<db:input-parameters ><![CDATA[#[//'EMPNO':payload.EMPNO
+'EMPNO':attributes.uriParams.EMPNO as Number]]]></db:input-parameters>
+		</db:select>
+		<logger level="INFO" doc:name="Logger" doc:id="8e992a23-295f-480d-8182-d6052eeef1af" message="#[payload]"/>
+	</flow>
+	<flow name="SelectEmp" doc:id="ddb32528-de61-4231-99b7-e0790c8ffae2" >
+		<http:listener doc:name="Listener" doc:id="b473c181-4b34-4c0b-a002-7f3f78cf83e8" config-ref="HTTP_Listener_config" path="/select">
+			<http:response >
+				<http:body ><![CDATA[#[%dw 2.0
+output application/json
+---
+payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<db:select doc:name="Select" doc:id="845666df-669d-4306-9449-e12b396b5458" config-ref="Database_Config">
+			<db:sql >select * from EMP</db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="c6fb5d43-4045-4619-9c5d-aee146e4151f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="ed566cc6-aa69-4c5a-8db9-0fb317909b95" />
+	</flow>
+	<flow name="Insert" doc:id="8ef005c2-8ea7-4dd5-8fc8-f64977d9ced0" >
+		<http:listener doc:name="Listener" doc:id="043e4e7c-335e-4798-ba09-9fca63bbd68e" config-ref="HTTP_Listener_config" path="/insert">
+			<http:response >
+				<http:body ><![CDATA[#[%dw 2.0
+output application/json
+---
+if(payload.affectedRows >= 1) 'Insert success' else 'Insert failed']]]></http:body>
+			</http:response>
+		</http:listener>
+		<db:insert doc:name="Insert" doc:id="b095287a-bc65-416d-93db-0eea60de3807" config-ref="Database_Config" transactionalAction="NOT_SUPPORTED">
+			<db:sql >Insert into EMP values (43743,'anil',73000)</db:sql>
+		</db:insert>
+		<logger level="INFO" doc:name="Logger" doc:id="b9b89fe1-c4a0-4a59-a27a-5d99e78a7ab2" />
+	</flow>
+	<flow name="delete" doc:id="0c5fa532-7798-42bf-b6cc-ffbd761bba06" >
+		<http:listener doc:name="Listener" doc:id="a42caa8d-d41a-406f-bf94-db823a5b4a1e" config-ref="HTTP_Listener_config" path="/delete">
+			<http:response >
+				<http:body ><![CDATA[#[%dw 2.0
+import * from dw::core::Strings
+output application/json
+---
+if(payload >= 1)"deleted" else if(payload == 0) "no records to delete" else substringAfter(payload as String,":")]]]></http:body>
+			</http:response>
+		</http:listener>
+		<db:delete doc:name="Delete" doc:id="af48c03e-9126-427c-a2a9-407a15c0d013" config-ref="Database_Config">
+			<db:sql >delete from EMP where EMPNO = 4374</db:sql>
+		</db:delete>
+		<logger level="INFO" doc:name="Logger" doc:id="7d7bdd5d-85f3-425d-bfc9-7b1032ccb3bb" />
+	</flow>
+</mule>

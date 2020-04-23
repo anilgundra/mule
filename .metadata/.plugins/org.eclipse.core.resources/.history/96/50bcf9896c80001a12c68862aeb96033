@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="28a13761-4f00-47ab-8e43-b937ab95d4e7" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="e3cfb3ca-ed9d-47d8-8b71-e49c5f8e084f" >
+		<salesforce:basic-connection username="anil.gundra@gmail.com" password="143@amma" securityToken="oVx5lt1sIwQqnWZwwJasfau6" />
+	</salesforce:sfdc-config>
+	<flow name="createRecordFlow" doc:id="9e299bee-dcdd-4e4c-a8a5-ffd8c24a5a69" >
+		<http:listener doc:name="Listener" doc:id="582ca3e0-0a25-40f9-9a99-eb9794177bb9" config-ref="HTTP_Listener_config" path="/salesforcecreaterecord"/>
+		<ee:transform doc:name="Transform Message" doc:id="031233e4-215b-4649-8081-a3497f58ff4d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map (item,index) ->
+{
+	Name:item.Name,
+	billingCountry:item.billingCountry,
+	billingState:item.billingState
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create doc:name="Create" doc:id="c36d7018-6650-43d6-806f-577702ec9031" config-ref="Salesforce_Config" type="Account"/>
+		<logger level="INFO" doc:name="Logger" doc:id="8b5bf927-0857-407e-8368-3b05d0e949c9" />
+	</flow>
+	<flow name="update" doc:id="22e1489a-4448-49e2-b2ea-d438cb3641f6" >
+		<http:listener doc:name="Listener" doc:id="325bfc1a-f8d8-406c-8c13-47e9854cec16" config-ref="HTTP_Listener_config" path="/salesforceupdate"/>
+		<ee:transform doc:name="Transform Message" doc:id="d4aa0ccb-7360-4122-8a95-5583224fbd47" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:update doc:name="Update" doc:id="46189af0-250b-45de-99e7-9cf73cd75079" config-ref="Salesforce_Config2" type="s"/>
+		<logger level="INFO" doc:name="Logger" doc:id="6f392e31-66a8-4383-b99b-427bb95109cb" />
+	</flow>
+</mule>

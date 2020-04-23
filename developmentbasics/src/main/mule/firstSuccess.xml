@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<db:config name="Database_SqlServer" doc:name="Database Config" doc:id="7cafd178-ee37-4f43-ad04-c0ba1ca7246c" >
+		<db:mssql-connection host="localhost" user="sa" password="12345" databaseName="ACE" />
+	</db:config>
+	<flow name="firstSuccessFlow" doc:id="46c844c3-efa0-4066-af6a-2855eace755d" >
+		<http:listener doc:name="Listener" doc:id="71021ace-5722-48c9-8593-40276bc763e1" config-ref="HTTP_Listener_config" path="/firstsuccess">
+			<http:response >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<first-successful doc:name="First Successful" doc:id="8ee72aa2-30e6-4deb-a781-62a5c7825dee" >
+			<route >
+				<db:select doc:name="Select" doc:id="221fb570-9389-42ca-a029-03dbcaa2ea93" config-ref="Database_Config">
+					<db:sql >select * from EMP</db:sql>
+				</db:select>
+			</route>
+			<route >
+				<db:select doc:name="Select" doc:id="431d049a-61b3-4ba7-b83c-8fb44f2a0adf" config-ref="Database_SqlServer">
+					<db:sql >select * from EMP</db:sql>
+				</db:select>
+			</route>
+		</first-successful>
+		<logger level="INFO" doc:name="Logger" doc:id="75ea1470-c8ee-4c47-8263-a4f1be41ab00" />
+	</flow>
+</mule>

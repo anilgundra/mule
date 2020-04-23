@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<global-property doc:name="Global Property" doc:id="f35646af-e80c-4ef1-b712-e55e09a4cadd" name="property.path" value="D:\ANIL\MULE\properties" />
+	<configuration-properties doc:name="Configuration properties" doc:id="48c42dc8-348c-4189-8648-aeb6434d107b" file="${property.path}/app-dev.properties" />
+	<global-property doc:name="Global Property" doc:id="3bd4394b-e314-4b0a-9520-637ddbd2b347" name="mule.env" value="dev" />
+	<flow name="externalizationFlow" doc:id="951dcfb7-67d2-4c40-a4d7-173e21680077" >
+		<scheduler doc:name="Scheduler" doc:id="063448e2-8a78-4bdb-8dfc-37e398a8c15c" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="10000"/>
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Logger" doc:id="c7b808df-983e-4b8c-8cd0-b9a7b8d6b284" message="#[p('text')]"/>
+	</flow>
+</mule>

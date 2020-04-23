@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="transformXMLFlow" doc:id="e99fdc44-3fa8-46b8-a17e-7992cc62dcda" >
+		<http:listener doc:name="Listener" doc:id="db05cd19-39a7-47ea-9220-a1ffab7986e9" config-ref="HTTP_Listener_8081" path="/xmltransform"/>
+		<ee:transform doc:name="Transform Message" doc:id="9663df48-7f8f-49dc-be15-c02d31fb721a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+ns way2learn http://way2learnonline.com/domain
+
+var products = payload.way2learn#products.*product
+type mydate = Date {format:"yyyy-MM-dd"}
+---
+products map {
+	pid:$.productId as Number,
+	pname:$.brandName,
+	off_Date: $.offer.offerValidUntil as mydate 
+				
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="aaa9b6b1-9d98-4139-8ed7-8d0fad956eed" message="#[payload]"/>
+	</flow>
+</mule>

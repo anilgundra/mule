@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="complexTransformFlow" doc:id="59996c5b-860f-415a-804a-05ae66c9d708" >
+		<http:listener doc:name="Listener" doc:id="e53aeaae-df0e-4287-8ef2-5206da5b78c2" config-ref="HTTP_Listener_8081" path="/complextransform"/>
+		<ee:transform doc:name="Transform Message" doc:id="5d6b2f64-488b-4645-9b5d-dcc2e4d4b7ae" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+//output application/json
+output application/xml
+var ConverstionRate = 70 //lookup('getConvertionFlow',attributes.queryParams.country) //time in seconds is important while debugging
+fun getConverstion(converVar) = converVar * ConverstionRate //function
+var getConverstionVar = (MyPrice) -> MyPrice * ConverstionRate // annoymous Function
+var myproducts = payload map {
+	pid:$.productId,
+	brandName:$.brandName,
+	originalPrice:$.offer.offerPrice,
+	ifTest:if($.productId == 1) "anil"  else "sunil"
+	
+}
+
+var argMyProducts = payload map (product, Productindex) -> {
+	pid: product.productId,
+	pname: product.name ++ '->' ++ Productindex,
+	OriginalPrice: getConverstion(product.offer.offerPrice),
+	O:getConverstionVar(product.offer.offerPrice),
+	country:attributes.uriParams.country,
+	con:ConverstionRate,
+	(imgs: {
+		img:product.images 
+	})if product.images?
+}
+var filteredProducts = (myproducts filter $.brandName == attributes.queryParams.bname)
+var object1 = {one:1,two:2}
+var AscendingOrderProd = (myproducts orderBy  $.originalPrice)
+var DescendingOrderProd = (myproducts orderBy  -$.originalPrice)
+
+var object2 = [
+	{one:1,two:2},
+	{one:1,two:2,three:3}
+]
+var a = 10
+var b = 20
+---
+//c: a + b
+// {} --> is an object
+// [] --> is an array
+// () --> for evaluate, if it is array then it will be merged
+//object1
+/* 
+{
+	(object1)
+}
+*/
+
+//object2
+
+/* {(object2)
+ }
+*/
+
+//myproducts
+
+/*
+{
+	(myproducts)
+}
+ */
+
+products:{
+	product:
+myproducts
+}
+
+]]></ee:set-payload>
+				<ee:set-attributes resource="complextranformationSuccess.dwl" />
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="df38beff-e2a7-464c-a241-954f30bd4d6f" />
+	</flow>
+	<flow name="getConvertionFlow" doc:id="17d37e20-d0b2-42ed-9bda-a381dab1c143" >
+		<choice doc:name="Choice" doc:id="510f7234-f6ad-448e-9705-d0c7e3b8cf8e" >
+			<when expression="#[payload == 'US']">
+				<set-payload value="#[75 as Number]" doc:name="Set Payload" doc:id="98d5e68b-794d-41f3-8b41-756a31ec6ad1" />
+			</when>
+			<when expression="#[payload == 'UK']">
+				<set-payload value="#[80]" doc:name="Set Payload" doc:id="dfa9a262-8d63-4bd8-9fa2-10366c270899" />
+			</when>
+			<otherwise >
+				<set-payload value="#[1]" doc:name="Set Payload" doc:id="75e67b42-c9bb-4ad4-927f-874aa3565b96" />
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

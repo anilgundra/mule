@@ -1,0 +1,24 @@
+#%RAML 1.0
+version: v1
+title: Customer API for Visual Editing
+mediaType:
+  - application/json
+protocols:
+  - HTTPS
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/ed504aa9-f222-4d26-916a-a5095ae888ad/api # baseUri: https://reqres.in/api
+/users:
+  description: it will return all users
+  get:
+    responses:
+      "200":
+        body:
+          application/json:
+            example: !include user.json
+              
+  /{uid}:
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include user.json

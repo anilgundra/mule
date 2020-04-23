@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="scriptingFlow" doc:id="fd66df2a-a8fd-41d9-a6b4-226d6b43eb44" >
+		<http:listener doc:name="Listener" doc:id="4c593089-7a23-4743-ba8c-95fdea4c1901" config-ref="HTTP_Listener_8081" path="/script"/>
+		<ee:transform doc:name="Transform Message" doc:id="7270daed-8645-4e0d-84cb-85aad3784f13" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::System
+output application/json
+---
+{
+	//FOR SINGLE
+	"envVars" : dw::System::envVars().COMMAND,
+	//FOR MULTIPLE
+    "envVars" : [
+       "real" : envVar("COMMAND"),
+       "fake" : envVar("FAKE_ENV_VAR")
+    ]
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="f26db060-78f1-422c-acbf-bf91d6c9fa4d" />
+	</flow>
+</mule>

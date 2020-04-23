@@ -1,0 +1,1370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:mule="http://www.mulesoft.org/schema/mule/core" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.mulesoft.org/schema/mule/mongo" attributeFormDefault="unqualified" elementFormDefault="qualified">
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace"></xs:import>
+  <xs:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans.xsd"></xs:import>
+  <xs:import namespace="http://www.mulesoft.org/schema/mule/core" schemaLocation="http://www.mulesoft.org/schema/mule/core/current/mule.xsd"></xs:import>
+  <xs:import namespace="http://www.mulesoft.org/schema/mule/tls" schemaLocation="http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd"></xs:import>
+  <xs:element xmlns:mule="http://www.mulesoft.org/schema/mule/core" substitutionGroup="mule:abstract-shared-extension" name="config">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="mule:abstractExtensionType">
+          <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element minOccurs="1" maxOccurs="1" ref="mule:abstractConnectionProvider"></xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" ref="mule:expiration-policy"></xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="read-preference-tags">
+              <xs:annotation>
+                <xs:documentation>If a replica set member or members are associated with tags, you can specify a tag set (array of tag specification documents) in the read preference to target those members.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo" minOccurs="0" maxOccurs="unbounded" ref="mongo:abstract-read-preference-tag"></xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="com.mulesoft.connector.mongo.api.ReadConcernOptionsEnumType" use="optional" name="readConcern">
+            <xs:annotation>
+              <xs:documentation>The read concern option allows you to control the consistency and isolation properties of the data read from replica sets and replica set shards.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="com.mulesoft.connector.mongo.api.ReadPreferenceEnumType" use="optional" default="PRIMARY" name="readPreference">
+            <xs:annotation>
+              <xs:documentation>Specifies the read preferences for this connection.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="mule:substitutableInt" use="optional" default="-1" name="maximumStalenessSeconds">
+            <xs:annotation>
+              <xs:documentation>Specifies, in seconds, how stale a secondary can be before the client stops using it for read operations.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="mule:substitutableName" use="optional" name="readPreferenceTags">
+            <xs:annotation>
+              <xs:documentation>If a replica set member or members are associated with tags, you can specify a tag set (array of tag specification documents) in the read preference to target those members.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="xs:string" use="required" name="name">
+            <xs:annotation>
+              <xs:documentation>The identifier of this element used to reference it in other components</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="xs:string" use="optional" name="writeConcernAcknowledgement">
+            <xs:annotation>
+              <xs:documentation>Requests acknowledgment that the write operation has propagated to the specified number of mongod instances. You can write a number of instances n&gt;0 or use a value from the list.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="mule:substitutableInt" use="optional" name="writeConcernTimeout">
+            <xs:annotation>
+              <xs:documentation>This option specifies a time limit, in milliseconds, for the write concern. it is only applicable for Write Concern Acknowledgement values greater than 1</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="SECONDS" name="writeConcernTimeoutTimeunit">
+            <xs:annotation>
+              <xs:documentation>The Timeunit for the Write Concern Timeout.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="com.mulesoft.connector.mongo.api.ReadPreferenceTag">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractExtensionType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" name="name-values">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="name-value">
+                  <xs:complexType>
+                    <xs:attribute type="mule:expressionString" use="required" name="key"></xs:attribute>
+                    <xs:attribute type="mule:expressionString" use="required" name="value"></xs:attribute>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionMap" use="optional" name="nameValue"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo" type="mongo:com.mulesoft.connector.mongo.api.ReadPreferenceTag" abstract="true" name="abstract-read-preference-tag"></xs:element>
+  <xs:element xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo" substitutionGroup="mongo:abstract-read-preference-tag" name="read-preference-tag">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="mongo:com.mulesoft.connector.mongo.api.ReadPreferenceTag"></xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element xmlns:mule="http://www.mulesoft.org/schema/mule/core" substitutionGroup="mule:abstractConnectionProvider" name="connection">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="mule:abstractConnectionProviderType">
+          <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element minOccurs="0" maxOccurs="1" ref="mule:reconnection"></xs:element>
+            <xs:element xmlns:tls="http://www.mulesoft.org/schema/mule/tls" minOccurs="0" maxOccurs="1" ref="tls:context"></xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="server-addresses">
+              <xs:annotation>
+                <xs:documentation>The server where your MongoDB instance is. You can set multiple servers.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo" minOccurs="0" maxOccurs="unbounded" ref="mongo:abstract-server-address"></xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="compressors">
+              <xs:annotation>
+                <xs:documentation>List of compressors to enable network compression for communication between this client and a mongod/mongos instance. If you specify multiple compressors, then the order in which you list the compressors matter as well as the communication initiator.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" name="compressor">
+                    <xs:complexType>
+                      <xs:attribute type="mule:expressionString" use="required" name="value"></xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="pooling-settings">
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="mule:abstractExtensionType">
+                    <xs:sequence></xs:sequence>
+                    <xs:attribute type="mule:substitutableInt" use="optional" name="minConnectionPoolSize">
+                      <xs:annotation>
+                        <xs:documentation>The minimum size for the connection pool.</xs:documentation>
+                      </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute type="mule:substitutableInt" use="optional" default="100" name="maxConnectionPoolSize">
+                      <xs:annotation>
+                        <xs:documentation>The maximum size for the connection pool.</xs:documentation>
+                      </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute type="mule:substitutableInt" use="optional" default="120" name="maxWaitQueueTime">
+                      <xs:annotation>
+                        <xs:documentation>The maximum wait queue time for the connection pool.</xs:documentation>
+                      </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="SECONDS" name="maxWaitQueueTimeUnit">
+                      <xs:annotation>
+                        <xs:documentation>The maximum wait queue time unit for the connection pool.</xs:documentation>
+                      </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute type="mule:substitutableInt" use="optional" name="maxConnectionLifeTime">
+                      <xs:annotation>
+                        <xs:documentation>The maximum connection lifetime for the connection pool.</xs:documentation>
+                      </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="SECONDS" name="maxConnectionLifeTimeUnit">
+                      <xs:annotation>
+                        <xs:documentation>The maximum connection lifetime Time Unit for the connection pool.</xs:documentation>
+                      </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute type="mule:substitutableInt" use="optional" name="maxConnectionIdleTime">
+                      <xs:annotation>
+                        <xs:documentation>The maximum connection idle time for the connection pool.</xs:documentation>
+                      </xs:annotation>
+                    </xs:attribute>
+                    <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="SECONDS" name="maxConnectionIdleTimeUnit">
+                      <xs:annotation>
+                        <xs:documentation>The maximum connection idle time Time Unit for the connection pool.</xs:documentation>
+                      </xs:annotation>
+                    </xs:attribute>
+                  </xs:extension>
+                </xs:complexContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute type="xs:string" use="optional" name="tlsContext"></xs:attribute>
+          <xs:attribute type="mule:expressionList" use="optional" name="serverAddresses">
+            <xs:annotation>
+              <xs:documentation>The server where your MongoDB instance is. You can set multiple servers.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="mule:expressionString" use="required" name="database">
+            <xs:annotation>
+              <xs:documentation>Specify the database name that you want to connecto to.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="username">
+            <xs:annotation>
+              <xs:documentation>The username to use for authentication.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="password">
+            <xs:annotation>
+              <xs:documentation>The password to use for authentication. If the password is null or whitespaces only, the connector won't use authentication and username must be empty too.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="replicaSetName">
+            <xs:annotation>
+              <xs:documentation>The name of the replica set to connect to. The server Addresses list can be partial when using this parameter. This means that the user can set just one host on Server Addresses, but set this value and It will connect to the full cluster</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="authenticationSource"></xs:attribute>
+          <xs:attribute type="mule:substitutableName" use="optional" name="compressors">
+            <xs:annotation>
+              <xs:documentation>List of compressors to enable network compression for communication between this client and a mongod/mongos instance. If you specify multiple compressors, then the order in which you list the compressors matter as well as the communication initiator.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="mule:substitutableInt" use="optional" default="-1" name="zlibCompressionLevel">
+            <xs:annotation>
+              <xs:documentation>An integer that specifies the compression level if using zlib for network compression. 0 means No Compression, 1-9 are the compression levels, with 1 being the lowest compression level, and 9 the most compressions (and more processing time)</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="mule:substitutableInt" use="optional" default="30" name="connectionTimeout">
+            <xs:annotation>
+              <xs:documentation>The connection timeout; this is for establishing the socket connections (open). 0 is infinite.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="SECONDS" name="connectionTimeoutTimeunit">
+            <xs:annotation>
+              <xs:documentation>The connection timeout unit.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="mule:substitutableInt" use="optional" default="15" name="localThreshold">
+            <xs:annotation>
+              <xs:documentation>The size of the latency window for selecting among multiple suitable MongoDB instances.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="MILLISECONDS" name="localThresholdTimeUnit">
+            <xs:annotation>
+              <xs:documentation>The local threshold Time Unit.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="mule:substitutableInt" use="optional" default="30" name="serverSelectionTimeout">
+            <xs:annotation>
+              <xs:documentation>Specifies how long to block for server selection before throwing an exception.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="SECONDS" name="serverSelectionTimeoutTimeUnit">
+            <xs:annotation>
+              <xs:documentation>The server selection Time Unit.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="mule:substitutableInt" use="optional" name="socketTimeout">
+            <xs:annotation>
+              <xs:documentation>The socket timeout. It is used for I/O socket read and write operations. 0 is default and infinite.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="SECONDS" name="socketTimeoutUnit">
+            <xs:annotation>
+              <xs:documentation>The socket timeout unit.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute type="mule:substitutableBoolean" use="optional" default="false" name="retryWrites">
+            <xs:annotation>
+              <xs:documentation>Enable retryable writes</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="com.mulesoft.connector.mongo.api.AuthenticationMechanismEnumType" use="optional" name="authenticationMechanism">
+            <xs:annotation>
+              <xs:documentation>The authentication Mechanism used for this connection</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="com.mulesoft.connector.mongo.api.ServerAddress">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractExtensionType">
+        <xs:attribute type="mule:expressionString" use="required" name="host"></xs:attribute>
+        <xs:attribute type="mule:expressionInt" use="optional" default="27017" name="port"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo" type="mongo:com.mulesoft.connector.mongo.api.ServerAddress" abstract="true" name="abstract-server-address"></xs:element>
+  <xs:element xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo" substitutionGroup="mongo:abstract-server-address" name="server-address">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="mongo:com.mulesoft.connector.mongo.api.ServerAddress"></xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="Object-listenerType" substitutionGroup="mule:abstract-message-source" name="object-listener"></xs:element>
+  <xs:complexType name="Object-listenerType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageSourceType">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-redelivery-policy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-byte-streaming-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element minOccurs="1" maxOccurs="1" ref="mule:scheduling-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:string" use="required" name="collectionName">
+          <xs:annotation>
+            <xs:documentation>The collection that will be watched to detect the matching documents.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="watermarkField">
+          <xs:annotation>
+            <xs:documentation>The field that will queried to detect the objects that match the trigger condition.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:substitutableBoolean" use="optional" name="primaryNodeOnly">
+          <xs:annotation>
+            <xs:documentation>Whether this source should only be executed on the primary node when runnning in Cluster</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="AddUserType" substitutionGroup="mule:abstract-operator" name="add-user">
+    <xs:annotation>
+      <xs:documentation>Adds a new user for this db</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="AddUserType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="username">
+          <xs:annotation>
+            <xs:documentation>Name of the user</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="required" name="password">
+          <xs:annotation>
+            <xs:documentation>Password that will be used for authentication</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="CollectionExistsType" substitutionGroup="mule:abstract-operator" name="collection-exists">
+    <xs:annotation>
+      <xs:documentation>Answers if a collection exists given its name</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CollectionExistsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="collectionName">
+          <xs:annotation>
+            <xs:documentation>the name of the collection</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="CountDocumentsType" substitutionGroup="mule:abstract-operator" name="count-documents">
+    <xs:annotation>
+      <xs:documentation>Counts the number of documents that match the given query. If no query is passed, returns the number of elements in the collection</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CountDocumentsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="query">
+            <xs:annotation>
+              <xs:documentation>The optional query for counting documents. Only documents matching it will be counted. If unspecified, all documents are counted. It can be: {"field1": "value1"} Or contain operators: { "field1": { $gte: 1, $lt:  10 } }</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="collectionName">
+          <xs:annotation>
+            <xs:documentation>The target collection</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="writeConcernAcknowledgement"></xs:attribute>
+        <xs:attribute type="mule:expressionInt" use="optional" name="writeConcernTimeout"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="java.util.concurrent.TimeUnitEnumType" use="optional" name="writeConcernTimeoutTimeunit"></xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="CreateCollectionType" substitutionGroup="mule:abstract-operator" name="create-collection">
+    <xs:annotation>
+      <xs:documentation>Creates a new collection. If the collection already exists, a MongoException will be thrown.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CreateCollectionType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="capped-options">
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="mule:abstractExtensionType">
+                  <xs:sequence></xs:sequence>
+                  <xs:attribute type="mule:expressionInt" use="optional" name="maxObjects">
+                    <xs:annotation>
+                      <xs:documentation>The maximum number of documents the new collection is able to contain</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute type="mule:expressionInt" use="optional" name="collectionSize">
+                    <xs:annotation>
+                      <xs:documentation>The maximum size of the new collection</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="org.mule.runtime.api.util.DataUnitEnumType" use="optional" default="BYTE" name="collectionSizeDataUnit">
+                    <xs:annotation>
+                      <xs:documentation>Data Unit of the Collection Size parameter, by default it will be in Bytes</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="collectionName">
+          <xs:annotation>
+            <xs:documentation>the name of the collection to create</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="CreateFileType" substitutionGroup="mule:abstract-operator" name="create-file">
+    <xs:annotation>
+      <xs:documentation>Creates a new file in the database, saving the given content, filename, contentType, and extraData.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CreateFileType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-byte-streaming-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="content">
+            <xs:annotation>
+              <xs:documentation>The mandatory content of the new file. This content is an InputStream.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="metadata">
+            <xs:annotation>
+              <xs:documentation>A JSON object that hold any information you want to store.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="filename">
+          <xs:annotation>
+            <xs:documentation>The name of the new file.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="CreateIndexType" substitutionGroup="mule:abstract-operator" name="create-index">
+    <xs:annotation>
+      <xs:documentation>Creates a new index</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CreateIndexType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="collectionName">
+          <xs:annotation>
+            <xs:documentation>The name of the collection where the index will be created</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="required" name="fieldName">
+          <xs:annotation>
+            <xs:documentation>The name of the field which will be indexed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="com.mulesoft.connector.mongo.api.IndexOrderEnumType" use="optional" default="ASC" name="sortOrder">
+          <xs:annotation>
+            <xs:documentation>The indexing order</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="DropCollectionType" substitutionGroup="mule:abstract-operator" name="drop-collection">
+    <xs:annotation>
+      <xs:documentation>Deletes a collection and all the objects it contains. If the collection does not exist, it throws a NOT_FOUND error.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DropCollectionType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="collectionName">
+          <xs:annotation>
+            <xs:documentation>The name of the collection to drop</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="DropDatabaseType" substitutionGroup="mule:abstract-operator" name="drop-database">
+    <xs:annotation>
+      <xs:documentation>Drop the current database</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DropDatabaseType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="databaseName">
+          <xs:annotation>
+            <xs:documentation>The name of the database to drop.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="DropIndexType" substitutionGroup="mule:abstract-operator" name="drop-index">
+    <xs:annotation>
+      <xs:documentation>Drops an existing index</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DropIndexType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="collectionName">
+          <xs:annotation>
+            <xs:documentation>The name of the collection</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="required" name="indexName">
+          <xs:annotation>
+            <xs:documentation>The name of the index to drop</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="DumpType" substitutionGroup="mule:abstract-operator" name="dump">
+    <xs:annotation>
+      <xs:documentation>Executes a dump of the database to the specified output directory. If no output directory is provided then the default /dump directory is used.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DumpType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="outputDirectory">
+          <xs:annotation>
+            <xs:documentation>Output directory where dump files will be created</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="outputNamePrefix">
+          <xs:annotation>
+            <xs:documentation>output file name prefix, if it's not specified the database name will be used.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="oplog">
+          <xs:annotation>
+            <xs:documentation>point in time backup (requires an oplog)</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionLong" use="optional" default="60" name="operationTimeout">
+          <xs:annotation>
+            <xs:documentation>Maximum wait time for the dump</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="SECONDS" name="operationTimeoutUnit">
+          <xs:annotation>
+            <xs:documentation>Time unit for the maximum wait time for the dump</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="outputMimeType">
+          <xs:annotation>
+            <xs:documentation>The mime type of the payload that this operation outputs.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="ExecuteCommandType" substitutionGroup="mule:abstract-operator" name="execute-command">
+    <xs:annotation>
+      <xs:documentation>Executes a command on the database.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="ExecuteCommandType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-byte-streaming-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="command">
+            <xs:annotation>
+              <xs:documentation>The command to execute on the database as a Document.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="FindDocumentsType" substitutionGroup="mule:abstract-operator" name="find-documents">
+    <xs:annotation>
+      <xs:documentation>Finds all documents that match a given query. If no query is specified, all documents of the collection are retrieved. If no fields object is specified, all fields are retrieved.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="FindDocumentsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-object-streaming-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="query">
+            <xs:annotation>
+              <xs:documentation>The optional query for finding documents. If unspecified, all documents are retrieved. It can be: {"field1": "value1"} Or contain operators: { "field1": { $gte: 1, $lt:  10 } }</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="sort-by">
+            <xs:annotation>
+              <xs:documentation>Indicates the document used to sort the results</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionInt" use="optional" default="100" name="pageSize">
+          <xs:annotation>
+            <xs:documentation>Size of documents of each page to return</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionInt" use="optional" name="limit">
+          <xs:annotation>
+            <xs:documentation>Limit of documents to return.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="writeConcernAcknowledgement"></xs:attribute>
+        <xs:attribute type="mule:expressionInt" use="optional" name="writeConcernTimeout"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="java.util.concurrent.TimeUnitEnumType" use="optional" name="writeConcernTimeoutTimeunit"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="outputMimeType">
+          <xs:annotation>
+            <xs:documentation>The mime type of the payload that this operation outputs.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="outputEncoding">
+          <xs:annotation>
+            <xs:documentation>The encoding of the payload that this operation outputs.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="required" name="collectionName"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="required" name="fields"></xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="FindFilesType" substitutionGroup="mule:abstract-operator" name="find-files">
+    <xs:annotation>
+      <xs:documentation>Lists all the files that match the given query</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="FindFilesType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="query">
+            <xs:annotation>
+              <xs:documentation>The query object used to list all the files. It can be: {"field1": "value1"} Or contains operators: { "field1": { $gte: 1, $lt:  10 } }</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="sort">
+            <xs:annotation>
+              <xs:documentation>Allows you to sort the result list. A file can only be sorted by files_id or uploadDate.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="optional" name="outputMimeType">
+          <xs:annotation>
+            <xs:documentation>The mime type of the payload that this operation outputs.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="outputEncoding">
+          <xs:annotation>
+            <xs:documentation>The encoding of the payload that this operation outputs.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="GetFileContentType" substitutionGroup="mule:abstract-operator" name="get-file-content">
+    <xs:annotation>
+      <xs:documentation>Gets an InputStream to the content of the file specified by the fileID.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetFileContentType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="file-id">
+            <xs:annotation>
+              <xs:documentation>The mandatory File ID.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="InsertDocumentType" substitutionGroup="mule:abstract-operator" name="insert-document">
+    <xs:annotation>
+      <xs:documentation>Insert a document in a collection. The _id object can be specified or not (and mongo will auto generate one).</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="InsertDocumentType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-byte-streaming-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="document">
+            <xs:annotation>
+              <xs:documentation>The document to insert</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="collectionName">
+          <xs:annotation>
+            <xs:documentation>The name of the collection where to insert the given document.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="writeConcernAcknowledgement"></xs:attribute>
+        <xs:attribute type="mule:expressionInt" use="optional" name="writeConcernTimeout"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="java.util.concurrent.TimeUnitEnumType" use="optional" name="writeConcernTimeoutTimeunit"></xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="InsertDocumentsType" substitutionGroup="mule:abstract-operator" name="insert-documents">
+    <xs:annotation>
+      <xs:documentation>Insert a list of documents in a collection. The _id object can be specified or not (and mongo will auto generate one).</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="InsertDocumentsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="documents">
+            <xs:annotation>
+              <xs:documentation>The list of the documents to insert.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="collectionName">
+          <xs:annotation>
+            <xs:documentation>the name of the collection where to insert the given document.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="writeOrdered">
+          <xs:annotation>
+            <xs:documentation>Indicates if the list of documents will be executed in order or not. Also If it's set in true and an error occurs during the processing of one of the write operations, MongoDB  will return without processing any remaining write operations in the list.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="writeConcernAcknowledgement"></xs:attribute>
+        <xs:attribute type="mule:expressionInt" use="optional" name="writeConcernTimeout"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="java.util.concurrent.TimeUnitEnumType" use="optional" name="writeConcernTimeoutTimeunit"></xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="ListCollectionsType" substitutionGroup="mule:abstract-operator" name="list-collections">
+    <xs:annotation>
+      <xs:documentation>Lists names of collections available at this database</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="ListCollectionsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="optional" name="outputMimeType">
+          <xs:annotation>
+            <xs:documentation>The mime type of the payload that this operation outputs.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="ListIndexesType" substitutionGroup="mule:abstract-operator" name="list-indexes">
+    <xs:annotation>
+      <xs:documentation>List existent indexes in a collection</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="ListIndexesType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="collectionName">
+          <xs:annotation>
+            <xs:documentation>the name of the collection</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="MapReduceType" substitutionGroup="mule:abstract-operator" name="map-reduce">
+    <xs:annotation>
+      <xs:documentation>Transforms a collection into a collection of aggregated groups, by applying a supplied element-mapping function to each element, that transforms each one into a key-value pair, grouping the resulting pairs by key, and finally reducing values in each group applying a suppling 'reduce' function. &lt;p&gt; Each supplied function is coded in JavaScript. &lt;p&gt; Note that the correct way of writing those functions may not be obvious; please consult MongoDB documentation for writing them.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="MapReduceType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-byte-streaming-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="mapping-function">
+            <xs:annotation>
+              <xs:documentation>a JavaScript encoded mapping function</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="reduce-function">
+            <xs:annotation>
+              <xs:documentation>a JavaScript encoded reducing function</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="collectionName">
+          <xs:annotation>
+            <xs:documentation>the name of the collection to map and reduce</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="outputCollection">
+          <xs:annotation>
+            <xs:documentation>the name of the output collection to write the results, replacing previous collection if existed, mandatory when results may be larger than 16MB. If outputCollection is unspecified, the computation is performed in-memory and not persisted.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="RemoveDocumentsType" substitutionGroup="mule:abstract-operator" name="remove-documents">
+    <xs:annotation>
+      <xs:documentation>Removes all the documents that match the a given optional query. If query is not specified, all documents are removed. However, please notice that this is normally less performant that dropping the collection and creating it and its indices again</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="RemoveDocumentsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="query">
+            <xs:annotation>
+              <xs:documentation>The query object used to detect the elements to delete. It can be: {"field1": "value1"} Or contain operators: { "field1": { $gte: 1, $lt:  10 } }</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="collectionName">
+          <xs:annotation>
+            <xs:documentation>The collection whose elements will be removed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="RemoveFilesType" substitutionGroup="mule:abstract-operator" name="remove-files">
+    <xs:annotation>
+      <xs:documentation>Removes the file that matches the given file id. If no file id is specified, all files are removed</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="RemoveFilesType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="file-id">
+            <xs:annotation>
+              <xs:documentation>The mandatory File ID to be deleted.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="RestoreFromDirectoryType" substitutionGroup="mule:abstract-operator" name="restore-from-directory">
+    <xs:annotation>
+      <xs:documentation>Takes the output from the dump and restores it. Indexes will be created on a restore. It only does inserts with the data to restore, if existing data is there, it will not be replaced.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="RestoreFromDirectoryType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="inputPath">
+          <xs:annotation>
+            <xs:documentation>Input path of the dump files, it MUST be a directory.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="dropCollections">
+          <xs:annotation>
+            <xs:documentation>whether to drop existing collections before restore</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="oplogReplay">
+          <xs:annotation>
+            <xs:documentation>replay oplog for point-in-time restore</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="RestoreFromFileType" substitutionGroup="mule:abstract-operator" name="restore-from-file">
+    <xs:annotation>
+      <xs:documentation>It does a restore from a single .bson file or zip file.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="RestoreFromFileType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="input">
+            <xs:annotation>
+              <xs:documentation>An InputStream that points to the dump file. It can be a zip file or just a bson file</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="collectionName">
+          <xs:annotation>
+            <xs:documentation>The name of the colletion to restore</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="dropCollection">
+          <xs:annotation>
+            <xs:documentation>whether to drop existing collections before restore</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/mongo" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="UpdateDocumentsType" substitutionGroup="mule:abstract-operator" name="update-documents">
+    <xs:annotation>
+      <xs:documentation>Updates documents that matches the given query. If query is not specified, all documents are retrieved. If parameter multi is set to false, only the first document matching it will be updated. Otherwise, all the documents matching it will be updated.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="UpdateDocumentsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-byte-streaming-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="query">
+            <xs:annotation>
+              <xs:documentation>The query object used to detect the element to update. It can be: {"field1": "value1"} Or contain operators: { "field1": { $gte: 1, $lt:  10 } }</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="content-to-update">
+            <xs:annotation>
+              <xs:documentation>The object that will replace the one which matches the query.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="collectionName">
+          <xs:annotation>
+            <xs:documentation>the name of the collection to update</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="multipleUpdate">
+          <xs:annotation>
+            <xs:documentation>If all or just the first document matching the query will be updated</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="upsert">
+          <xs:annotation>
+            <xs:documentation>If set to true, creates a new document when no document matches the query criteria. The default value is false, which does not insert a new document when no match is found.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="writeConcernAcknowledgement"></xs:attribute>
+        <xs:attribute type="mule:expressionInt" use="optional" name="writeConcernTimeout"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/mongo" type="java.util.concurrent.TimeUnitEnumType" use="optional" name="writeConcernTimeoutTimeunit"></xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="com.mulesoft.connector.mongo.api.ReadConcernOptionsEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="LOCAL"></xs:enumeration>
+          <xs:enumeration value="AVAILABLE"></xs:enumeration>
+          <xs:enumeration value="MAJORITY"></xs:enumeration>
+          <xs:enumeration value="LINEARIZABLE"></xs:enumeration>
+          <xs:enumeration value="SNAPSHOT"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="com.mulesoft.connector.mongo.api.ReadPreferenceEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="PRIMARY"></xs:enumeration>
+          <xs:enumeration value="PRIMARY_PREFERED"></xs:enumeration>
+          <xs:enumeration value="SECONDARY"></xs:enumeration>
+          <xs:enumeration value="SECONDARY_PREFERRED"></xs:enumeration>
+          <xs:enumeration value="NEAREST"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="java.util.concurrent.TimeUnitEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="NANOSECONDS"></xs:enumeration>
+          <xs:enumeration value="MICROSECONDS"></xs:enumeration>
+          <xs:enumeration value="MILLISECONDS"></xs:enumeration>
+          <xs:enumeration value="SECONDS"></xs:enumeration>
+          <xs:enumeration value="MINUTES"></xs:enumeration>
+          <xs:enumeration value="HOURS"></xs:enumeration>
+          <xs:enumeration value="DAYS"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="com.mulesoft.connector.mongo.api.AuthenticationMechanismEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="PLAIN"></xs:enumeration>
+          <xs:enumeration value="SCRAM_SHA_1"></xs:enumeration>
+          <xs:enumeration value="SCRAM_SHA_256"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="org.mule.runtime.api.util.DataUnitEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="BYTE"></xs:enumeration>
+          <xs:enumeration value="KB"></xs:enumeration>
+          <xs:enumeration value="MB"></xs:enumeration>
+          <xs:enumeration value="GB"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="com.mulesoft.connector.mongo.api.IndexOrderEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ASC"></xs:enumeration>
+          <xs:enumeration value="DESC"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+</xs:schema>

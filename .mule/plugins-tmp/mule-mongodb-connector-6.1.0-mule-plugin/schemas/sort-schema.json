@@ -1,0 +1,12 @@
+{
+  "_id": {
+    "$id": "#/properties/_id",
+    "type": "string",
+    "enum": ["ASC", "DESC"]
+  },
+  "uploadDate": {
+    "$id": "#/properties/uploadDate",
+    "type": "string",
+    "enum": ["ASC", "DESC"]
+  }
+}

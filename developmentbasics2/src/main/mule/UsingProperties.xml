@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="37185f55-38c7-4578-8623-c3f77030230a" >
+		<db:oracle-connection host="${sql.host}" user="${sql.username}" password="${sql.password}" port="${sql.port}"/>
+	</db:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="6fd2c9ae-5fba-4bcf-ba42-3972862bdaee" file="mule-app.properties" />
+	<flow name="UsingPropertiesFlow" doc:id="cc87e53c-7430-405d-9b6d-3772158e1a14" >
+		<http:listener doc:name="Listener" doc:id="0aa59488-aed4-407a-9123-e85b41576a5c" config-ref="HTTP_Listener_config" path="${http.path}">
+			<http:response >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<db:select doc:name="Select" doc:id="b1143afa-1724-4c0f-b8a5-71b13c5caec1" config-ref="Database_Config">
+			<db:sql >select * from emp</db:sql>
+		</db:select>
+		<logger level="INFO" doc:name="Logger" doc:id="af2f42b7-cd2c-4199-9c0e-86bce21894d9" />
+	</flow>
+</mule>

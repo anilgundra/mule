@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<os:config name="ObjectStore_Map" doc:name="ObjectStore Config" doc:id="41364a0e-0783-4a96-b6f2-984f97955bac" />
+	<os:object-store name="Map" doc:name="Object store" doc:id="b19bb39c-a77c-409d-b709-99cfc3e4c37b" maxEntries="10" entryTtl="5" config-ref="ObjectStore_Map" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="fbc7dc36-61ac-48a0-8d59-0876472f8a8f" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="9b73e039-7f8e-4754-81b2-2b2dca11aeb3" >
+		<file:connection workingDir="D:\" />
+	</file:config>
+	<flow name="ObjectStoreFlow" doc:id="314abc62-5b62-4711-9344-06e5382ff050" >
+		<http:listener doc:name="Listener" doc:id="4c0f70f3-78c3-4a02-9777-cfe304faa8bb" path="/store/{key}/{value}" config-ref="HTTP_Listener_config">
+			<http:response >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<os:store doc:name="Store" doc:id="11d31288-d5e9-47f3-95b5-a5c99478ad34" objectStore="Map" key="#[attributes.uriParams.key]" failIfPresent="true">
+			<os:value ><![CDATA[#[attributes.uriParams.value]]]></os:value>
+		</os:store>
+		<logger level="INFO" doc:name="Logger" doc:id="ed4b521a-2ac4-45d9-92c2-8e4e7047ccb7" />
+	</flow>
+	<flow name="ObjectStoreFlow1" doc:id="79aafeeb-43d6-4766-80ec-6251b49dc436" >
+		<http:listener doc:name="Listener" doc:id="8802e151-da1c-44d0-9dbb-0bd92e004e27" config-ref="HTTP_Listener_config" path="/retrieve">
+			<http:response >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<os:retrieve-all doc:name="Retrieve all" doc:id="5f5ce7d7-cca2-47f4-b0d0-2856e1fbe9eb" objectStore="Map"/>
+		<logger level="INFO" doc:name="Logger" doc:id="afafb89b-4aa0-4c5e-89f4-212115223137" />
+	</flow>
+	<flow name="retrieve" doc:id="17583702-c69e-480c-b911-9744a08e8eb6" >
+		<http:listener doc:name="Listener" doc:id="17164039-6c07-4921-819f-696df0179976" config-ref="HTTP_Listener_config" path="/retrieve/{key}">
+			<http:response >
+				<http:body ><![CDATA[#[output application/json --- payload as String ++ " : is value "]]]></http:body>
+			</http:response>
+		</http:listener>
+		<os:retrieve doc:name="Retrieve" doc:id="180dd959-c630-4cbb-8259-548070c9fe9e" key="#[attributes.uriParams.key]" objectStore="Map">
+		</os:retrieve>
+		<logger level="INFO" doc:name="Logger" doc:id="9ac57265-ff2a-4f14-8249-6f9a978b46dd" />
+	</flow>
+	<flow name="ObjectStoreFlow2" doc:id="98f24162-41b7-4b58-b105-8f856959b98a" >
+		<http:listener doc:name="Listener" doc:id="b37cfa99-f5cb-4c0f-a99c-eab92f3512a3" config-ref="HTTP_Listener_config" path="/contains/{key}">
+			<http:response >
+				<http:body ><![CDATA[#[output application/json ---  payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<os:contains doc:name="Contains" doc:id="df23f01c-43ee-497a-9f74-e081fa028002" key="#[attributes.uriParams.key]" objectStore="Map"/>
+		<os:retrieve-all-keys doc:name="Retrieve all keys" doc:id="62eb698a-0cb3-4916-a31c-4db4d34845b8" objectStore="Map"/>
+	</flow>
+</mule>

@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="Account" format="json">
+      <types:shape format="weave" example="examples/salesforcecreate.json"><![CDATA[%dw 2.0
+
+type Account = Array<{|  Name: String,   billingCountry: String,   billingState: String|}> {"example": "[{\\\"Name\\\":\\\"anil gundra\\\",\\\"billingCountry\\\":\\\"India\\\",\\\"billingState\\\":\\\"AP\\\"},{\\\"Name\\\":\\\"sunil gundra\\\",\\\"billingCountry\\\":\\\"India\\\",\\\"billingState\\\":\\\"AP\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="contacts" format="json">
+      <types:shape format="weave" example="examples/salesforceupdate.json"><![CDATA[%dw 2.0
+
+type contacts = Array<{|  firstname: String,   lastname: String,   email: String,   phone: Number {"typeId": "double"}|}> {"example": "[{\\\"firstname\\\":\\\"anil\\\",\\\"lastname\\\":\\\"gundra\\\",\\\"email\\\":\\\"anil.gundra@gmail.com\\\",\\\"phone\\\":9059334489},{\\\"firstname\\\":\\\"sunil\\\",\\\"lastname\\\":\\\"gundra\\\",\\\"email\\\":\\\"sunil.gundra@gmail.com\\\",\\\"phone\\\":8096711053},{\\\"firstname\\\":\\\"lingaraju\\\",\\\"lastname\\\":\\\"gundra\\\",\\\"email\\\":\\\"lingaraju.gundra@gmail.com\\\",\\\"phone\\\":8096711053}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#031233e4-215b-4649-8081-a3497f58ff4d">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="Account"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#d4aa0ccb-7360-4122-8a95-5583224fbd47">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="contacts"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

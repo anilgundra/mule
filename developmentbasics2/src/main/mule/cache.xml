@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<ee:object-store-caching-strategy name="Caching_Strategy" doc:name="Caching Strategy" doc:id="4132c075-2003-4cf1-8808-92bc09152bce" keyGenerationExpression="#[vars.OriginalPayload]" >
+		<os:private-object-store maxEntries="5" entryTtl="2" entryTtlUnit="MINUTES" expirationInterval="2" config-ref="ObjectStore_Map" />
+	</ee:object-store-caching-strategy>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="e250f776-fef0-488c-96f6-20bd4d9e1eaa" >
+		<http:request-connection host="reqres.in" />
+	</http:request-config>
+	<flow name="cacheFlow" doc:id="7a0813b0-7ac2-47b1-9be1-8975caa90e8c" >
+		<http:listener doc:name="Listener" doc:id="ecdc900d-8e82-4373-a894-1882afaf7adc" config-ref="HTTP_Listener_config" path="/cache/{test}"/>
+		<set-variable value="#[attributes.uriParams.test]" doc:name="Set Variable" doc:id="085d2571-d5af-4bd9-b654-377617a23416" variableName="OriginalPayload"/>
+		<ee:cache doc:name="Cache" doc:id="caea80ee-26c7-47d0-bd7d-3f15759b02da" cachingStrategy-ref="Caching_Strategy">
+			<http:request method="GET" doc:name="Request" doc:id="1096c763-8718-47ff-8829-0bb4720f808c" config-ref="HTTP_Request_configuration" path='#["/api/users/" ++ vars.OriginalPayload as String]'/>
+			<logger level="INFO" doc:name="Logger" doc:id="f2fff313-6c1d-4642-b7d1-134f31425e00" message="in cache block"/>
+		</ee:cache>
+		<logger level="INFO" doc:name="Logger" doc:id="8b3d71c5-0d73-4d9f-9e34-8ec87119b3d0" message="end of flow"/>
+	</flow>
+</mule>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:mllp="http://www.mulesoft.org/schema/mule/mllp"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/mllp http://www.mulesoft.org/schema/mule/mllp/current/mule-mllp.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<mllp:mllp-listener-config name="HL7_MLLP_Mllp_listener_config" doc:name="HL7 MLLP Mllp listener config" doc:id="786146a3-af58-4bad-ae09-a0c34ac505b5" >
+		<mllp:mllp-listener-connection host="localhost" port="1111" />
+	</mllp:mllp-listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="9d36f735-a7f9-4ccc-8fb2-7dfdd731b993" >
+		<file:connection workingDir="D:\File\FileOut" />
+	</file:config>
+	<flow name="HL7Flow" doc:id="10aa4e03-c21f-424c-b534-745d7db77a29" >
+		<mllp:mllp-listener doc:name="Mllp listener" doc:id="f3aa4224-afb6-4514-b9f8-b3cf3199ac13" config-ref="HL7_MLLP_Mllp_listener_config" />
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="30920a0c-b2bc-40e4-9a86-07ef2f150b72" variableName="msg"/>
+		<ee:transform doc:name="Transform Message" doc:id="b2176ce4-8920-4025-b14b-f2800df58af0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<file:write doc:name="Write" doc:id="20e83008-cf4d-42ba-b479-3484113d60e5" config-ref="File_Config" path="test12345.txt"/>
+		<logger level="INFO" doc:name="Logger" doc:id="a371181b-ee0c-41d6-a624-c13a7025c684" message="tansformed"/>
+	</flow>
+</mule>

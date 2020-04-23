@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+	<flow name="SYNCFlow" doc:id="8e2a7f6c-73ff-4487-a8f4-850f392fcd33" tracking:enable-default-events="true">
+		<http:listener doc:name="Listener" doc:id="65ccc02a-c90a-4936-af01-e7008008c92b" config-ref="HTTP_Listener_config" path="/sync"/>
+		<ee:transform doc:name="Transform Message" doc:id="9a15ec4d-61dd-455e-b14e-f2ecedc52e09" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::Runtime
+output application/json
+---
+{"Time":now()} wait 1000 ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="c73e16dd-37b3-4dad-bb15-5386f113cff4" />
+	</flow>
+	<flow name="ASYNCFlow" doc:id="9adf0902-a07d-4c24-bd19-3243742135c5" initialState="started">
+		<http:listener doc:name="Listener" doc:id="9f27caab-4278-4c82-ae72-5ee8055545d5" config-ref="HTTP_Listener_config" path="/async"/>
+		<async doc:name="Async" doc:id="1d06be0a-085d-4720-b718-06d4d3b50de7" maxConcurrency="10">
+			<ee:transform doc:name="Transform Message" doc:id="4fea1420-782a-42bd-adba-5830e95aa7fd">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+import * from dw::Runtime
+output application/json
+---
+{"Time":now()} wait 60000 ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		</async>
+		<logger level="INFO" doc:name="Logger" doc:id="0a83e046-5963-45d2-b311-0cd231519502" />
+	</flow>
+</mule>

@@ -1,0 +1,850 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:mule="http://www.mulesoft.org/schema/mule/core" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.mulesoft.org/schema/mule/ibm-mq" attributeFormDefault="unqualified" elementFormDefault="qualified">
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace"></xs:import>
+  <xs:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans.xsd"></xs:import>
+  <xs:import namespace="http://www.mulesoft.org/schema/mule/core" schemaLocation="http://www.mulesoft.org/schema/mule/core/current/mule.xsd"></xs:import>
+  <xs:import namespace="http://www.mulesoft.org/schema/mule/tls" schemaLocation="http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd"></xs:import>
+  <xs:complexType name="com.mulesoft.connectors.ibmmq.api.consumer.MQConsumerType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractExtensionType"></xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:mule="http://www.mulesoft.org/schema/mule/core" xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" type="ibm-mq:com.mulesoft.connectors.ibmmq.api.consumer.MQConsumerType" substitutionGroup="mule:abstract-shared-extension" abstract="true" name="global-abstract-mq-consumer-type"></xs:element>
+  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" type="ibm-mq:com.mulesoft.connectors.ibmmq.api.consumer.MQConsumerType" abstract="true" name="abstract-mq-consumer-type"></xs:element>
+  <xs:complexType name="com.mulesoft.connectors.ibmmq.api.consumer.MQTopicConsumer">
+    <xs:complexContent>
+      <xs:extension xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" base="ibm-mq:com.mulesoft.connectors.ibmmq.api.consumer.MQConsumerType">
+        <xs:attribute xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="mule:substitutableBoolean" use="optional" default="false" name="durable"></xs:attribute>
+        <xs:attribute xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="mule:substitutableBoolean" use="optional" default="false" name="shared"></xs:attribute>
+        <xs:attribute xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="mule:substitutableBoolean" use="optional" default="false" name="noLocal"></xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="subscriptionName"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" type="ibm-mq:com.mulesoft.connectors.ibmmq.api.consumer.MQTopicConsumer" substitutionGroup="ibm-mq:abstract-mq-consumer-type" abstract="true" name="abstract-topic-consumer"></xs:element>
+  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" substitutionGroup="ibm-mq:abstract-topic-consumer" name="topic-consumer">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="ibm-mq:com.mulesoft.connectors.ibmmq.api.consumer.MQTopicConsumer"></xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="com.mulesoft.connectors.ibmmq.api.consumer.MQQueueConsumer">
+    <xs:complexContent>
+      <xs:extension xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" base="ibm-mq:com.mulesoft.connectors.ibmmq.api.consumer.MQConsumerType"></xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" type="ibm-mq:com.mulesoft.connectors.ibmmq.api.consumer.MQQueueConsumer" substitutionGroup="ibm-mq:abstract-mq-consumer-type" abstract="true" name="abstract-queue-consumer"></xs:element>
+  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" substitutionGroup="ibm-mq:abstract-queue-consumer" name="queue-consumer">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="ibm-mq:com.mulesoft.connectors.ibmmq.api.consumer.MQQueueConsumer"></xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="com.mulesoft.connectors.ibmmq.api.connection.mode.MQConnectionMode">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractExtensionType"></xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:mule="http://www.mulesoft.org/schema/mule/core" xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" type="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.mode.MQConnectionMode" substitutionGroup="mule:abstract-shared-extension" abstract="true" name="global-abstract-mq-connection-mode"></xs:element>
+  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" type="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.mode.MQConnectionMode" abstract="true" name="abstract-mq-connection-mode"></xs:element>
+  <xs:complexType name="com.mulesoft.connectors.ibmmq.api.connection.mode.BindingConnectionMode">
+    <xs:complexContent>
+      <xs:extension xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" base="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.mode.MQConnectionMode">
+        <xs:attribute type="xs:string" use="optional" name="queueManager"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" type="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.mode.BindingConnectionMode" substitutionGroup="ibm-mq:abstract-mq-connection-mode" abstract="true" name="abstract-binding"></xs:element>
+  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" substitutionGroup="ibm-mq:abstract-binding" name="binding">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.mode.BindingConnectionMode"></xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="com.mulesoft.connectors.ibmmq.api.connection.mode.ClientConnectionMode">
+    <xs:complexContent>
+      <xs:extension xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" base="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.mode.MQConnectionMode">
+        <xs:attribute type="xs:string" use="required" name="host"></xs:attribute>
+        <xs:attribute xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="mule:substitutableInt" use="optional" default="1414" name="port"></xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="queueManager"></xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="channel"></xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="connectionNameList"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" type="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.mode.ClientConnectionMode" substitutionGroup="ibm-mq:abstract-mq-connection-mode" abstract="true" name="abstract-client"></xs:element>
+  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" substitutionGroup="ibm-mq:abstract-client" name="client">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.mode.ClientConnectionMode"></xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="com.mulesoft.connectors.ibmmq.api.connection.cache.MQCachingStrategy">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractExtensionType"></xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:mule="http://www.mulesoft.org/schema/mule/core" xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" type="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.cache.MQCachingStrategy" substitutionGroup="mule:abstract-shared-extension" abstract="true" name="global-abstract-mq-caching-strategy"></xs:element>
+  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" type="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.cache.MQCachingStrategy" abstract="true" name="abstract-mq-caching-strategy"></xs:element>
+  <xs:complexType name="com.mulesoft.connectors.ibmmq.api.connection.cache.MQDefaultCachingStrategy">
+    <xs:complexContent>
+      <xs:extension xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" base="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.cache.MQCachingStrategy">
+        <xs:attribute xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="mule:substitutableInt" use="optional" name="sessionCacheSize"></xs:attribute>
+        <xs:attribute xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="mule:substitutableBoolean" use="optional" default="true" name="cacheProducers"></xs:attribute>
+        <xs:attribute xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="mule:substitutableBoolean" use="optional" default="true" name="cacheConsumers"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" type="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.cache.MQDefaultCachingStrategy" substitutionGroup="ibm-mq:abstract-mq-caching-strategy" abstract="true" name="abstract-default-caching"></xs:element>
+  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" substitutionGroup="ibm-mq:abstract-default-caching" name="default-caching">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.cache.MQDefaultCachingStrategy"></xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="com.mulesoft.connectors.ibmmq.api.connection.cache.NoCachingConfiguration">
+    <xs:complexContent>
+      <xs:extension xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" base="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.cache.MQCachingStrategy"></xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" type="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.cache.NoCachingConfiguration" substitutionGroup="ibm-mq:abstract-mq-caching-strategy" abstract="true" name="abstract-no-caching"></xs:element>
+  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" substitutionGroup="ibm-mq:abstract-no-caching" name="no-caching">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="ibm-mq:com.mulesoft.connectors.ibmmq.api.connection.cache.NoCachingConfiguration"></xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element xmlns:mule="http://www.mulesoft.org/schema/mule/core" substitutionGroup="mule:abstract-shared-extension" name="config">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="mule:abstractExtensionType">
+          <xs:annotation>
+            <xs:documentation>Default configuration</xs:documentation>
+          </xs:annotation>
+          <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element minOccurs="1" maxOccurs="1" ref="mule:abstractConnectionProvider"></xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" ref="mule:expiration-policy"></xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="consumer-config">
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="mule:abstractExtensionType">
+                    <xs:sequence>
+                      <xs:element minOccurs="0" maxOccurs="1" name="consumer-type">
+                        <xs:complexType>
+                          <xs:choice minOccurs="1" maxOccurs="1">
+                            <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" minOccurs="1" maxOccurs="1" ref="ibm-mq:abstract-mq-consumer-type"></xs:element>
+                            <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" minOccurs="1" maxOccurs="1" ref="ibm-mq:global-abstract-mq-consumer-type"></xs:element>
+                          </xs:choice>
+                        </xs:complexType>
+                      </xs:element>
+                    </xs:sequence>
+                    <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="com.mulesoft.connectors.ibmmq.api.ack.AckModeEnumType" use="optional" default="AUTO" name="ackMode"></xs:attribute>
+                    <xs:attribute type="xs:string" use="optional" name="selector"></xs:attribute>
+                  </xs:extension>
+                </xs:complexContent>
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="producer-config">
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="mule:abstractExtensionType">
+                    <xs:sequence></xs:sequence>
+                    <xs:attribute type="mule:substitutableBoolean" use="optional" default="false" name="persistentDelivery"></xs:attribute>
+                    <xs:attribute type="mule:substitutableInt" use="optional" default="4" name="priority"></xs:attribute>
+                    <xs:attribute type="mule:substitutableLong" use="optional" default="0" name="timeToLive"></xs:attribute>
+                    <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="MILLISECONDS" name="timeToLiveUnit"></xs:attribute>
+                    <xs:attribute type="mule:substitutableBoolean" use="optional" default="false" name="disableMessageId"></xs:attribute>
+                    <xs:attribute type="mule:substitutableBoolean" use="optional" default="false" name="disableMessageTimestamp"></xs:attribute>
+                    <xs:attribute type="mule:substitutableLong" use="optional" name="deliveryDelay"></xs:attribute>
+                    <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="MILLISECONDS" name="deliveryDelayUnit"></xs:attribute>
+                    <xs:attribute type="xs:string" use="optional" name="jmsType"></xs:attribute>
+                  </xs:extension>
+                </xs:complexContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute type="xs:string" use="optional" name="encoding"></xs:attribute>
+          <xs:attribute type="xs:string" use="optional" default="*/*" name="contentType"></xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="org.mule.runtime.extension.api.runtime.parameter.OutboundCorrelationStrategyEnumType" use="optional" default="AUTO" name="sendCorrelationId"></xs:attribute>
+          <xs:attribute type="xs:string" use="required" name="name">
+            <xs:annotation>
+              <xs:documentation>The identifier of this element used to reference it in other components</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element xmlns:mule="http://www.mulesoft.org/schema/mule/core" substitutionGroup="mule:abstractConnectionProvider" name="connection">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="mule:abstractConnectionProviderType">
+          <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element minOccurs="0" maxOccurs="1" ref="mule:reconnection"></xs:element>
+            <xs:element xmlns:tls="http://www.mulesoft.org/schema/mule/tls" minOccurs="0" maxOccurs="1" ref="tls:context"></xs:element>
+            <xs:element minOccurs="1" maxOccurs="1" name="connection-mode">
+              <xs:complexType>
+                <xs:choice minOccurs="1" maxOccurs="1">
+                  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" minOccurs="1" maxOccurs="1" ref="ibm-mq:abstract-mq-connection-mode"></xs:element>
+                  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" minOccurs="1" maxOccurs="1" ref="ibm-mq:global-abstract-mq-connection-mode"></xs:element>
+                </xs:choice>
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="additional-properties">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" name="additional-property">
+                    <xs:complexType>
+                      <xs:attribute type="mule:expressionString" use="required" name="key"></xs:attribute>
+                      <xs:attribute type="mule:expressionString" use="required" name="value"></xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="caching-strategy">
+              <xs:complexType>
+                <xs:choice minOccurs="1" maxOccurs="1">
+                  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" minOccurs="1" maxOccurs="1" ref="ibm-mq:abstract-mq-caching-strategy"></xs:element>
+                  <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" minOccurs="1" maxOccurs="1" ref="ibm-mq:global-abstract-mq-caching-strategy"></xs:element>
+                </xs:choice>
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="handlers-config">
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="mule:abstractExtensionType">
+                    <xs:sequence></xs:sequence>
+                    <xs:attribute type="xs:string" use="optional" name="receiveExitHandler"></xs:attribute>
+                    <xs:attribute type="xs:string" use="optional" name="receiveExitHandlerInit"></xs:attribute>
+                    <xs:attribute type="xs:string" use="optional" name="sendExitHandler"></xs:attribute>
+                    <xs:attribute type="xs:string" use="optional" name="sendExitHandlerInit"></xs:attribute>
+                    <xs:attribute type="xs:string" use="optional" name="securityExitHandler"></xs:attribute>
+                    <xs:attribute type="xs:string" use="optional" name="securityExitHandlerInit"></xs:attribute>
+                  </xs:extension>
+                </xs:complexContent>
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="xa-connection-pool">
+              <xs:complexType>
+                <xs:complexContent>
+                  <xs:extension base="mule:abstractExtensionType">
+                    <xs:sequence></xs:sequence>
+                    <xs:attribute type="mule:expressionInt" use="optional" default="4" name="minPoolSize"></xs:attribute>
+                    <xs:attribute type="mule:expressionInt" use="optional" default="32" name="maxPoolSize"></xs:attribute>
+                    <xs:attribute type="mule:expressionInt" use="optional" default="60" name="maxIdleSeconds"></xs:attribute>
+                  </xs:extension>
+                </xs:complexContent>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute type="xs:string" use="optional" name="tlsContext"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="username"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="password"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="clientId"></xs:attribute>
+          <xs:attribute type="mule:expressionInt" use="optional" name="cssId"></xs:attribute>
+          <xs:attribute type="mule:substitutableName" use="optional" name="additionalProperties"></xs:attribute>
+          <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="enableXa"></xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="com.mulesoft.connectors.ibmmq.api.MQJmsSpecEnumType" use="optional" default="JMS_2_0" name="specification"></xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="com.mulesoft.connectors.ibmmq.api.MQTargetClientEnumType" use="optional" default="JMS_COMPLIANT" name="targetClient"></xs:attribute>
+          <xs:attribute type="xs:string" use="optional" name="applicationName"></xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="com.mulesoft.connectors.ibmmq.api.EnablementEnumType" use="optional" default="ENABLED" name="readMessageDescriptor"></xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="com.mulesoft.connectors.ibmmq.api.EnablementEnumType" use="optional" default="ENABLED" name="writeMessageDescriptor"></xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="com.mulesoft.connectors.ibmmq.api.connection.MQMessageContextEnumType" use="optional" default="DEFAULT" name="messageContext"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="temporaryModel"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="temporalQueuePrefix"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="temporalTopicPrefix"></xs:attribute>
+          <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="com.mulesoft.connectors.ibmmq.api.ssl.CipherSuiteMappingEnumType" use="optional" default="ORACLE_CIPHER_SUITES" name="cipherSuiteMapping"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="cipherSuite"></xs:attribute>
+          <xs:attribute type="mule:expressionInt" use="optional" name="resetCount"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="peerName"></xs:attribute>
+          <xs:attribute type="mule:expressionBoolean" use="optional" default="false" name="fipsRequired"></xs:attribute>
+          <xs:attribute type="mule:expressionString" use="optional" name="certStores"></xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="ListenerType" substitutionGroup="mule:abstract-message-source" name="listener"></xs:element>
+  <xs:complexType name="ListenerType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageSourceType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-redelivery-policy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="consumer-type">
+            <xs:complexType>
+              <xs:choice minOccurs="1" maxOccurs="1">
+                <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" minOccurs="1" maxOccurs="1" ref="ibm-mq:abstract-mq-consumer-type"></xs:element>
+                <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" minOccurs="1" maxOccurs="1" ref="ibm-mq:global-abstract-mq-consumer-type"></xs:element>
+              </xs:choice>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="reply-to-response">
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="mule:abstractExtensionType">
+                  <xs:sequence>
+                    <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="body"></xs:element>
+                    <xs:element minOccurs="0" maxOccurs="1" name="reply-to">
+                      <xs:complexType>
+                        <xs:complexContent>
+                          <xs:extension xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" base="ibm-mq:com.mulesoft.connectors.ibmmq.api.MQJmsDestination"></xs:extension>
+                        </xs:complexContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="properties"></xs:element>
+                    <xs:element minOccurs="0" maxOccurs="1" name="jmsx-properties">
+                      <xs:complexType>
+                        <xs:complexContent>
+                          <xs:extension xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" base="ibm-mq:com.mulesoft.connectors.ibmmq.api.MQJmsxProperties"></xs:extension>
+                        </xs:complexContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute type="mule:expressionString" use="optional" name="jmsType"></xs:attribute>
+                  <xs:attribute type="mule:expressionString" use="optional" name="correlationId"></xs:attribute>
+                  <xs:attribute type="mule:expressionBoolean" use="optional" default="true" name="sendContentType"></xs:attribute>
+                  <xs:attribute type="mule:expressionString" use="optional" name="outboundContentType"></xs:attribute>
+                  <xs:attribute type="mule:expressionBoolean" use="optional" default="true" name="sendEncoding"></xs:attribute>
+                  <xs:attribute type="mule:expressionString" use="optional" name="outboundEncoding"></xs:attribute>
+                  <xs:attribute type="xs:string" use="optional" name="replyTo"></xs:attribute>
+                  <xs:attribute type="xs:string" use="optional" name="jmsxProperties"></xs:attribute>
+                  <xs:attribute type="mule:expressionBoolean" use="optional" name="persistentDelivery"></xs:attribute>
+                  <xs:attribute type="mule:expressionInt" use="optional" name="priority"></xs:attribute>
+                  <xs:attribute type="mule:expressionLong" use="optional" name="timeToLive"></xs:attribute>
+                  <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="java.util.concurrent.TimeUnitEnumType" use="optional" name="timeToLiveUnit"></xs:attribute>
+                  <xs:attribute type="mule:expressionBoolean" use="optional" name="disableMessageId"></xs:attribute>
+                  <xs:attribute type="mule:expressionBoolean" use="optional" name="disableMessageTimestamp"></xs:attribute>
+                  <xs:attribute type="mule:expressionLong" use="optional" name="deliveryDelay"></xs:attribute>
+                  <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="java.util.concurrent.TimeUnitEnumType" use="optional" name="deliveryDelayUnit"></xs:attribute>
+                  <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="org.mule.runtime.extension.api.runtime.parameter.OutboundCorrelationStrategyEnumType" use="optional" name="sendCorrelationId"></xs:attribute>
+                  <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="com.mulesoft.connectors.ibmmq.api.RequestReplyPatternEnumType" use="optional" default="CORRELATION_ID" name="requestReplyPattern"></xs:attribute>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="xs:string" use="required" name="destination"></xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="consumerType"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="com.mulesoft.connectors.ibmmq.api.ack.AckModeEnumType" use="optional" name="ackMode"></xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="selector"></xs:attribute>
+        <xs:attribute type="mule:substitutableInt" use="optional" default="4" name="numberOfConsumers"></xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="org.mule.runtime.extension.api.tx.SourceTransactionalActionEnumType" use="optional" default="NONE" name="transactionalAction">
+          <xs:annotation>
+            <xs:documentation>The type of beginning action that sources can take regarding transactions.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:transactionType" use="optional" default="LOCAL" name="transactionType">
+          <xs:annotation>
+            <xs:documentation>The type of transaction to create. Availability will depend on the runtime version.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:substitutableBoolean" use="optional" name="primaryNodeOnly">
+          <xs:annotation>
+            <xs:documentation>Whether this source should only be executed on the primary node when runnning in Cluster</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="contentType"></xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="encoding"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="com.mulesoft.connectors.ibmmq.api.MQJmsDestination">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractExtensionType">
+        <xs:attribute type="mule:expressionString" use="required" name="destination"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="com.mulesoft.connectors.ibmmq.api.MQDestinationTypeEnumType" use="optional" default="QUEUE" name="destinationType"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="com.mulesoft.connectors.ibmmq.api.MQJmsxProperties">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractExtensionType">
+        <xs:attribute type="mule:expressionString" use="optional" name="jmsxUserID"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="jmsxAppID"></xs:attribute>
+        <xs:attribute type="mule:expressionInt" use="optional" name="jmsxDeliveryCount"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="jmsxGroupID"></xs:attribute>
+        <xs:attribute type="mule:expressionInt" use="optional" name="jmsxGroupSeq"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="jmsxProducerTXID"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="jmsxConsumerTXID"></xs:attribute>
+        <xs:attribute type="mule:expressionLong" use="optional" name="jmsxRcvTimestamp"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="ConsumeType" substitutionGroup="mule:abstract-operator" name="consume">
+    <xs:annotation>
+      <xs:documentation>Operation that allows the user to consume a single Message from a given Destination.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="ConsumeType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="consumer-type">
+            <xs:annotation>
+              <xs:documentation>the type of the MessageConsumer that is required for the given destination, along with any extra configurations that are required based on the destination type.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:choice minOccurs="1" maxOccurs="1">
+                <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" minOccurs="1" maxOccurs="1" ref="ibm-mq:abstract-mq-consumer-type"></xs:element>
+                <xs:element xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" minOccurs="1" maxOccurs="1" ref="ibm-mq:global-abstract-mq-consumer-type"></xs:element>
+              </xs:choice>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="destination">
+          <xs:annotation>
+            <xs:documentation>the name of the Destination from where the Message should be consumed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="consumerType">
+          <xs:annotation>
+            <xs:documentation>the type of the MessageConsumer that is required for the given destination, along with any extra configurations that are required based on the destination type.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="com.mulesoft.connectors.ibmmq.api.ack.ConsumerAckModeEnumType" use="optional" name="ackMode">
+          <xs:annotation>
+            <xs:documentation>the ConsumerAckMode that will be configured over the Message and Session</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="selector">
+          <xs:annotation>
+            <xs:documentation>a custom JMS selector for filtering the messages</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionLong" use="optional" default="10000" name="maximumWait">
+          <xs:annotation>
+            <xs:documentation>maximum time to wait for a message before timing out</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="MILLISECONDS" name="maximumWaitUnit">
+          <xs:annotation>
+            <xs:documentation>Time unit to be used in the maximumWaitTime configurations</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:operationTransactionalActionType" use="optional" default="JOIN_IF_POSSIBLE" name="transactionalAction">
+          <xs:annotation>
+            <xs:documentation>The type of joining action that operations can take regarding transactions.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="contentType"></xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" name="encoding"></xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="PublishType" substitutionGroup="mule:abstract-operator" name="publish">
+    <xs:annotation>
+      <xs:documentation>Operation that allows the user to send a Message to a JMS Destination</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="PublishType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="message">
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="mule:abstractExtensionType">
+                  <xs:sequence>
+                    <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="body"></xs:element>
+                    <xs:element minOccurs="0" maxOccurs="1" name="reply-to">
+                      <xs:complexType>
+                        <xs:complexContent>
+                          <xs:extension xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" base="ibm-mq:com.mulesoft.connectors.ibmmq.api.MQJmsDestination"></xs:extension>
+                        </xs:complexContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="properties"></xs:element>
+                    <xs:element minOccurs="0" maxOccurs="1" name="jmsx-properties">
+                      <xs:complexType>
+                        <xs:complexContent>
+                          <xs:extension xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" base="ibm-mq:com.mulesoft.connectors.ibmmq.api.MQJmsxProperties"></xs:extension>
+                        </xs:complexContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute type="mule:expressionString" use="optional" name="jmsType"></xs:attribute>
+                  <xs:attribute type="mule:expressionString" use="optional" name="correlationId"></xs:attribute>
+                  <xs:attribute type="mule:expressionBoolean" use="optional" default="true" name="sendContentType"></xs:attribute>
+                  <xs:attribute type="mule:expressionString" use="optional" name="outboundContentType"></xs:attribute>
+                  <xs:attribute type="mule:expressionBoolean" use="optional" default="true" name="sendEncoding"></xs:attribute>
+                  <xs:attribute type="mule:expressionString" use="optional" name="outboundEncoding"></xs:attribute>
+                  <xs:attribute type="xs:string" use="optional" name="replyTo"></xs:attribute>
+                  <xs:attribute type="xs:string" use="optional" name="jmsxProperties"></xs:attribute>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="destination">
+          <xs:annotation>
+            <xs:documentation>the name of the Destination where the Message should be sent</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="com.mulesoft.connectors.ibmmq.api.MQDestinationTypeEnumType" use="optional" default="QUEUE" name="destinationType">
+          <xs:annotation>
+            <xs:documentation>the MQDestinationType of the destination</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:operationTransactionalActionType" use="optional" default="JOIN_IF_POSSIBLE" name="transactionalAction">
+          <xs:annotation>
+            <xs:documentation>Transactional Action for the operation. Indicates if the publish must be executed or not in a transaction.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="org.mule.runtime.extension.api.runtime.parameter.OutboundCorrelationStrategyEnumType" use="optional" name="sendCorrelationId">
+          <xs:annotation>
+            <xs:documentation>options on whether to include an outbound correlation id or not</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" name="persistentDelivery"></xs:attribute>
+        <xs:attribute type="mule:expressionInt" use="optional" name="priority"></xs:attribute>
+        <xs:attribute type="mule:expressionLong" use="optional" name="timeToLive"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="java.util.concurrent.TimeUnitEnumType" use="optional" name="timeToLiveUnit"></xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" name="disableMessageId"></xs:attribute>
+        <xs:attribute type="mule:expressionBoolean" use="optional" name="disableMessageTimestamp"></xs:attribute>
+        <xs:attribute type="mule:expressionLong" use="optional" name="deliveryDelay"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="java.util.concurrent.TimeUnitEnumType" use="optional" name="deliveryDelayUnit"></xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="PublishConsumeType" substitutionGroup="mule:abstract-operator" name="publish-consume">
+    <xs:annotation>
+      <xs:documentation>Operation that allows the user to send a message to a JMS Destination and waits for a response either to the provided ReplyTo destination or to a temporary Destination created dynamically</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="PublishConsumeType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+          <xs:element minOccurs="0" maxOccurs="1" ref="mule:abstract-reconnection-strategy"></xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="message">
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="mule:abstractExtensionType">
+                  <xs:sequence>
+                    <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="body"></xs:element>
+                    <xs:element minOccurs="0" maxOccurs="1" name="reply-to">
+                      <xs:complexType>
+                        <xs:complexContent>
+                          <xs:extension xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" base="ibm-mq:com.mulesoft.connectors.ibmmq.api.MQJmsDestination"></xs:extension>
+                        </xs:complexContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element type="xs:string" minOccurs="0" maxOccurs="1" name="properties"></xs:element>
+                    <xs:element minOccurs="0" maxOccurs="1" name="jmsx-properties">
+                      <xs:complexType>
+                        <xs:complexContent>
+                          <xs:extension xmlns:ibm-mq="http://www.mulesoft.org/schema/mule/ibm-mq" base="ibm-mq:com.mulesoft.connectors.ibmmq.api.MQJmsxProperties"></xs:extension>
+                        </xs:complexContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute type="mule:expressionString" use="optional" name="jmsType"></xs:attribute>
+                  <xs:attribute type="mule:expressionString" use="optional" name="correlationId"></xs:attribute>
+                  <xs:attribute type="mule:expressionBoolean" use="optional" default="true" name="sendContentType"></xs:attribute>
+                  <xs:attribute type="mule:expressionString" use="optional" name="outboundContentType"></xs:attribute>
+                  <xs:attribute type="mule:expressionBoolean" use="optional" default="true" name="sendEncoding"></xs:attribute>
+                  <xs:attribute type="mule:expressionString" use="optional" name="outboundEncoding"></xs:attribute>
+                  <xs:attribute type="xs:string" use="optional" name="replyTo"></xs:attribute>
+                  <xs:attribute type="xs:string" use="optional" name="jmsxProperties"></xs:attribute>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="publish-configuration">
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="mule:abstractExtensionType">
+                  <xs:sequence></xs:sequence>
+                  <xs:attribute type="mule:expressionBoolean" use="optional" name="persistentDelivery"></xs:attribute>
+                  <xs:attribute type="mule:expressionInt" use="optional" name="priority"></xs:attribute>
+                  <xs:attribute type="mule:expressionLong" use="optional" name="timeToLive"></xs:attribute>
+                  <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="java.util.concurrent.TimeUnitEnumType" use="optional" name="timeToLiveUnit"></xs:attribute>
+                  <xs:attribute type="mule:expressionBoolean" use="optional" name="disableMessageId"></xs:attribute>
+                  <xs:attribute type="mule:expressionBoolean" use="optional" name="disableMessageTimestamp"></xs:attribute>
+                  <xs:attribute type="mule:expressionLong" use="optional" name="deliveryDelay"></xs:attribute>
+                  <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="java.util.concurrent.TimeUnitEnumType" use="optional" name="deliveryDelayUnit"></xs:attribute>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="consume-configuration">
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="mule:abstractExtensionType">
+                  <xs:sequence></xs:sequence>
+                  <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="com.mulesoft.connectors.ibmmq.api.ack.ConsumerAckModeEnumType" use="optional" name="ackMode"></xs:attribute>
+                  <xs:attribute type="mule:expressionLong" use="optional" default="10000" name="maximumWait"></xs:attribute>
+                  <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="java.util.concurrent.TimeUnitEnumType" use="optional" default="MILLISECONDS" name="maximumWaitUnit"></xs:attribute>
+                  <xs:attribute type="mule:expressionString" use="optional" name="inboundContentType"></xs:attribute>
+                  <xs:attribute type="mule:expressionString" use="optional" name="inboundEncoding"></xs:attribute>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="destination">
+          <xs:annotation>
+            <xs:documentation>the name of the Destination where the Message should be sent</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="com.mulesoft.connectors.ibmmq.api.RequestReplyPatternEnumType" use="optional" default="CORRELATION_ID" name="requestReplyPattern"></xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" type="org.mule.runtime.extension.api.runtime.parameter.OutboundCorrelationStrategyEnumType" use="optional" name="sendCorrelationId">
+          <xs:annotation>
+            <xs:documentation>options on whether to include an outbound correlation id or not</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="required" name="config-ref">
+          <xs:annotation>
+            <xs:documentation>The name of the configuration to be used to execute this component</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" use="optional" name="target">
+          <xs:annotation>
+            <xs:documentation>The name of a variable on which the operation's output will be placed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="mule:expressionString" use="optional" default="#[payload]" name="targetValue">
+          <xs:annotation>
+            <xs:documentation>An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="AckType" substitutionGroup="mule:abstract-operator" name="ack">
+    <xs:annotation>
+      <xs:documentation>Allows the user to perform an ACK when the AckMode#MANUAL mode is elected while consuming the Message. As per JMS Spec, performing an ACK over a single Message automatically works as an ACK for all the Messages produced in the same JmsSession.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="AckType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1"></xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="ackId">
+          <xs:annotation>
+            <xs:documentation>The AckId of the Message to ACK</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/ibm-mq" xmlns:mule="http://www.mulesoft.org/schema/mule/core" type="RecoverSessionType" substitutionGroup="mule:abstract-operator" name="recover-session">
+    <xs:annotation>
+      <xs:documentation>Allows the user to perform a session recover when the AckMode#MANUAL mode is elected while consuming the Message. As per JMS Spec, performing a session recover automatically will redeliver all the consumed messages that had not being acknowledged before this recover.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="RecoverSessionType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractOperatorType">
+        <xs:sequence minOccurs="0" maxOccurs="1"></xs:sequence>
+        <xs:attribute type="mule:expressionString" use="required" name="ackId">
+          <xs:annotation>
+            <xs:documentation>The AckId of the Message Session to recover</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="org.mule.runtime.extension.api.runtime.parameter.OutboundCorrelationStrategyEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="AUTO"></xs:enumeration>
+          <xs:enumeration value="ALWAYS"></xs:enumeration>
+          <xs:enumeration value="NEVER"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="com.mulesoft.connectors.ibmmq.api.ack.AckModeEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="IMMEDIATE"></xs:enumeration>
+          <xs:enumeration value="AUTO"></xs:enumeration>
+          <xs:enumeration value="MANUAL"></xs:enumeration>
+          <xs:enumeration value="DUPS_OK"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="java.util.concurrent.TimeUnitEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="NANOSECONDS"></xs:enumeration>
+          <xs:enumeration value="MICROSECONDS"></xs:enumeration>
+          <xs:enumeration value="MILLISECONDS"></xs:enumeration>
+          <xs:enumeration value="SECONDS"></xs:enumeration>
+          <xs:enumeration value="MINUTES"></xs:enumeration>
+          <xs:enumeration value="HOURS"></xs:enumeration>
+          <xs:enumeration value="DAYS"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="com.mulesoft.connectors.ibmmq.api.MQJmsSpecEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="JMS_2_0"></xs:enumeration>
+          <xs:enumeration value="JMS_1_1"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="com.mulesoft.connectors.ibmmq.api.MQTargetClientEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="JMS_COMPLIANT"></xs:enumeration>
+          <xs:enumeration value="NO_JMS_COMPLIANT"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="com.mulesoft.connectors.ibmmq.api.EnablementEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ENABLED"></xs:enumeration>
+          <xs:enumeration value="DISABLED"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="com.mulesoft.connectors.ibmmq.api.connection.MQMessageContextEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="DEFAULT"></xs:enumeration>
+          <xs:enumeration value="SET_ALL_CONTEXT"></xs:enumeration>
+          <xs:enumeration value="SET_IDENTITY_CONTEXT"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="com.mulesoft.connectors.ibmmq.api.ssl.CipherSuiteMappingEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ORACLE_CIPHER_SUITES"></xs:enumeration>
+          <xs:enumeration value="IBM_CIPHER_SUITES"></xs:enumeration>
+          <xs:enumeration value="NONE"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="org.mule.runtime.extension.api.tx.SourceTransactionalActionEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ALWAYS_BEGIN"></xs:enumeration>
+          <xs:enumeration value="NONE"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="com.mulesoft.connectors.ibmmq.api.MQDestinationTypeEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="QUEUE"></xs:enumeration>
+          <xs:enumeration value="TOPIC"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="com.mulesoft.connectors.ibmmq.api.RequestReplyPatternEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="CORRELATION_ID"></xs:enumeration>
+          <xs:enumeration value="MESSAGE_ID"></xs:enumeration>
+          <xs:enumeration value="NONE"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="com.mulesoft.connectors.ibmmq.api.ack.ConsumerAckModeEnumType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="IMMEDIATE"></xs:enumeration>
+          <xs:enumeration value="MANUAL"></xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+</xs:schema>

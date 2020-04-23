@@ -1,0 +1,13 @@
+#%RAML 1.0
+title: Student
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/441e17ac-513b-4d25-bd5a-8350639da2af/
+description: get the details of student details
+/student:
+  get:
+    responses:
+      200:
+        description: 
+        body:
+          application/json:
+            example: !include student.json
+              

@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension-documentation>
+    <configs>
+        <config name="config">
+            <description><![CDATA[Default configuration]]></description>
+            <parameters>
+                <parameter name="defaultWriteEncoding">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeBetweenSizeCheck">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeBetweenSizeCheckUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="expirationPolicy">
+                    <description><![CDATA[Configures the minimum amount of time that a dynamic configuration instance can remain idle before the runtime considers it eligible for expiration. This does not mean that the platform will expire the instance at the exact moment that it becomes eligible. The runtime will actually purge the instances when it sees it fit.]]></description>
+                </parameter>
+            </parameters>
+        </config>
+    </configs>
+    <connections>
+        <connection name="connection">
+            <description><![CDATA[A specialization of FtpConnectionProvider which supports SSL]]></description>
+            <parameters>
+                <parameter name="workingDir">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="transferMode">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="passive">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="remoteVerificationEnabled">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="controlEncoding">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="ftpsMode">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="tlsContext">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="connectionTimeout">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="connectionTimeoutUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="responseTimeout">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="responseTimeoutUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="host">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="port">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="username">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="password">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="reconnection">
+                    <description><![CDATA[When the application is deployed, a connectivity test is performed on all connectors. If set to true, deployment will fail if the test doesn't pass after exhausting the associated reconnection strategy]]></description>
+                </parameter>
+                <parameter name="poolingProfile">
+                    <description><![CDATA[Characteristics of the connection pool]]></description>
+                </parameter>
+            </parameters>
+        </connection>
+        <connection name="connection">
+            <description><![CDATA[A specialization of FtpConnectionProvider which supports SSL]]></description>
+            <parameters>
+                <parameter name="workingDir">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="transferMode">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="passive">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="remoteVerificationEnabled">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="controlEncoding">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="ftpsMode">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="tlsContext">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="connectionTimeout">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="connectionTimeoutUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="responseTimeout">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="responseTimeoutUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="host">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="port">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="username">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="password">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="reconnection">
+                    <description><![CDATA[When the application is deployed, a connectivity test is performed on all connectors. If set to true, deployment will fail if the test doesn't pass after exhausting the associated reconnection strategy]]></description>
+                </parameter>
+                <parameter name="poolingProfile">
+                    <description><![CDATA[Characteristics of the connection pool]]></description>
+                </parameter>
+            </parameters>
+        </connection>
+    </connections>
+    <extension name="FTPS">
+        <description><![CDATA[Allows manipulating files in a FTPS server]]></description>
+        <parameters/>
+    </extension>
+    <operations>
+        <operation name="copy">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="sourcePath">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="targetPath">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="createParentDirectories">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="overwrite">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="renameTo">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="reconnectionStrategy">
+                    <description><![CDATA[A retry strategy in case of connectivity errors]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+        <operation name="createDirectory">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="directoryPath">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="reconnectionStrategy">
+                    <description><![CDATA[A retry strategy in case of connectivity errors]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+        <operation name="delete">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="path">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="reconnectionStrategy">
+                    <description><![CDATA[A retry strategy in case of connectivity errors]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+        <operation name="list">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="directoryPath">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="recursive">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="matcher">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeBetweenSizeCheck">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeBetweenSizeCheckUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="streamingStrategy">
+                    <description><![CDATA[Configure if repeatable streams should be used and their behaviour]]></description>
+                </parameter>
+                <parameter name="target">
+                    <description><![CDATA[The name of a variable on which the operation's output will be placed]]></description>
+                </parameter>
+                <parameter name="targetValue">
+                    <description><![CDATA[An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable]]></description>
+                </parameter>
+                <parameter name="reconnectionStrategy">
+                    <description><![CDATA[A retry strategy in case of connectivity errors]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+        <operation name="move">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="sourcePath">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="targetPath">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="createParentDirectories">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="overwrite">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="renameTo">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="reconnectionStrategy">
+                    <description><![CDATA[A retry strategy in case of connectivity errors]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+        <operation name="read">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="path">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="lock">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeBetweenSizeCheck">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeBetweenSizeCheckUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="outputMimeType">
+                    <description><![CDATA[The mime type of the payload that this operation outputs.]]></description>
+                </parameter>
+                <parameter name="outputEncoding">
+                    <description><![CDATA[The encoding of the payload that this operation outputs.]]></description>
+                </parameter>
+                <parameter name="streamingStrategy">
+                    <description><![CDATA[Configure if repeatable streams should be used and their behaviour]]></description>
+                </parameter>
+                <parameter name="target">
+                    <description><![CDATA[The name of a variable on which the operation's output will be placed]]></description>
+                </parameter>
+                <parameter name="targetValue">
+                    <description><![CDATA[An expression that will be evaluated against the operation's output and the outcome of that expression will be stored in the target variable]]></description>
+                </parameter>
+                <parameter name="reconnectionStrategy">
+                    <description><![CDATA[A retry strategy in case of connectivity errors]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+        <operation name="rename">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="path">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="to">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="overwrite">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="reconnectionStrategy">
+                    <description><![CDATA[A retry strategy in case of connectivity errors]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+        <operation name="write">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="path">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="content">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="encoding">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="createParentDirectories">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="lock">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="mode">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="reconnectionStrategy">
+                    <description><![CDATA[A retry strategy in case of connectivity errors]]></description>
+                </parameter>
+            </parameters>
+        </operation>
+    </operations>
+    <sources>
+        <source name="listener">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="directory">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="recursive">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="matcher">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="watermarkEnabled">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeBetweenSizeCheck">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeBetweenSizeCheckUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="outputMimeType">
+                    <description><![CDATA[The mime type of the payload that this operation outputs.]]></description>
+                </parameter>
+                <parameter name="outputEncoding">
+                    <description><![CDATA[The encoding of the payload that this operation outputs.]]></description>
+                </parameter>
+                <parameter name="primaryNodeOnly">
+                    <description><![CDATA[Whether this source should only be executed on the primary node when runnning in Cluster]]></description>
+                </parameter>
+                <parameter name="schedulingStrategy">
+                    <description><![CDATA[Configures the scheduler that triggers the polling]]></description>
+                </parameter>
+                <parameter name="streamingStrategy">
+                    <description><![CDATA[Configure if repeatable streams should be used and their behaviour]]></description>
+                </parameter>
+                <parameter name="redeliveryPolicy">
+                    <description><![CDATA[Defines a policy for processing the redelivery of the same message]]></description>
+                </parameter>
+                <parameter name="reconnectionStrategy">
+                    <description><![CDATA[A retry strategy in case of connectivity errors]]></description>
+                </parameter>
+                <parameter name="autoDelete">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="moveToDirectory">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="renameTo">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="applyPostActionWhenFailed">
+                    <description><![CDATA[]]></description>
+                </parameter>
+            </parameters>
+        </source>
+    </sources>
+    <types>
+        <type name="com.mulesoft.extension.ftps.api.mode.FtpsExplicitMode">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="protSetting">
+                    <description><![CDATA[]]></description>
+                </parameter>
+            </parameters>
+        </type>
+        <type name="com.mulesoft.extension.ftps.api.mode.FtpsImplicitMode">
+            <description><![CDATA[]]></description>
+            <parameters/>
+        </type>
+        <type name="com.mulesoft.extension.ftps.api.mode.FtpsMode">
+            <description><![CDATA[]]></description>
+            <parameters/>
+        </type>
+        <type name="com.mulesoft.extension.ftps.api.mode.setting.ProtSettingExporter">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="protSetting">
+                    <description><![CDATA[]]></description>
+                </parameter>
+            </parameters>
+        </type>
+        <type name="com.mulesoft.extension.ftps.api.mode.setting.ProtSettingExporterSubType">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="protSetting">
+                    <description><![CDATA[]]></description>
+                </parameter>
+            </parameters>
+        </type>
+        <type name="org.mule.extension.file.common.api.matcher.FileMatcher">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="filenamePattern">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="pathPattern">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="directories">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="regularFiles">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="symLinks">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="minSize">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="maxSize">
+                    <description><![CDATA[]]></description>
+                </parameter>
+            </parameters>
+        </type>
+        <type name="org.mule.extension.ftp.api.FtpFileMatcher">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="timestampSince">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timestampUntil">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="notUpdatedInTheLast">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="updatedInTheLast">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="timeUnit">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="filenamePattern">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="pathPattern">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="directories">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="regularFiles">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="symLinks">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="minSize">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="maxSize">
+                    <description><![CDATA[]]></description>
+                </parameter>
+            </parameters>
+        </type>
+        <type name="org.mule.extension.ftp.api.ftp.FtpFileAttributes">
+            <description><![CDATA[]]></description>
+            <parameters>
+                <parameter name="timestamp">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="name">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="size">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="regularFile">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="directory">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="symbolicLink">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="path">
+                    <description><![CDATA[]]></description>
+                </parameter>
+                <parameter name="fileName">
+                    <description><![CDATA[]]></description>
+                </parameter>
+            </parameters>
+        </type>
+    </types>
+</extension-documentation>

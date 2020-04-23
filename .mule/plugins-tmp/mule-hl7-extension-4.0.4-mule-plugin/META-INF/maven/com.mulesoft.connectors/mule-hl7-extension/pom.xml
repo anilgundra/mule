@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>com.mulesoft.connectors</groupId>
+        <artifactId>mule-connectivity-parent</artifactId>
+        <version>3.2.2</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <name>HL7 Connector - Mule 4</name>
+    <groupId>com.mulesoft.connectors</groupId>
+    <artifactId>mule-hl7-extension</artifactId>
+    <version>4.0.4</version>
+    <packaging>mule-extension</packaging>
+
+    <properties>
+        <jdk.version>1.8</jdk.version>
+        <project.schema.version>4.0.5</project.schema.version>
+        <metadata-flatfile.version>1.2.0</metadata-flatfile.version>
+        <base.scala.version>2.12</base.scala.version>
+        <scala.version>${base.scala.version}.7</scala.version>
+        <licensePath>LICENSE.md</licensePath>
+        <!-- Remove when a new parent version with MTF is available -->
+        <munit.input.directory>src/test/munit</munit.input.directory>
+        <munit.output.directory>${basedir}/target/test-mule/munit</munit.output.directory>
+        <munit.extensions.maven.plugin.version>1.0.0</munit.extensions.maven.plugin.version>
+        <munit.version>2.2.3</munit.version>
+        <mtf.tools.version>1.0.0</mtf.tools.version>
+        <mavenResourcesVersion>3.0.2</mavenResourcesVersion>
+        <!-- runtime version to run -->
+        <runtimeVersion>4.2.1</runtimeVersion>
+        <runtimeProduct>MULE_EE</runtimeProduct>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.mycila.maven-license-plugin</groupId>
+                    <artifactId>maven-license-plugin</artifactId>
+                    <version>1.8.0</version>
+                    <configuration>
+                        <header>LICENSE_HEADER.txt</header>
+                        <excludes>
+                            <exclude>target/**</exclude>
+                            <exclude>**/.mule/*</exclude>
+                            <exclude>**/.idea/*</exclude>
+                            <exclude>**/.gitignore</exclude>
+                            <exclude>**/*.txt</exclude>
+                            <exclude>**/*.ftl</exclude>
+                            <exclude>**/*.xml</exclude>
+                            <exclude>**/*.properties</exclude>
+                            <exclude>**/*.sample</exclude>
+                            <exclude>**/*.md</exclude>
+                            <exclude>**/build-number.txt</exclude>
+                            <exclude>**/*.xsd</exclude>
+                            <exclude>**/*.xls</exclude>
+                            <exclude>**/*.html</exclude>
+                            <exclude>**/resources/**</exclude>
+                            <exclude>id_file</exclude>
+                            <exclude>**/*.mflow</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.8.5</version>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/*com/mulesoft/connectors/hl7/extension/internal/param/*</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <dependencies>
+          <dependency>
+            <groupId>com.mulesoft.connectors</groupId>
+            <artifactId>hl7-schemas</artifactId>
+            <version>${project.schema.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.metadata.flatfile</groupId>
+            <artifactId>schema-metadata</artifactId>
+            <version>${metadata-flatfile.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.connectors</groupId>
+            <artifactId>mule-file-connector</artifactId>
+            <version>1.3.1</version>
+            <classifier>mule-plugin</classifier>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -1,0 +1,23 @@
+{
+  "sampleData": {
+    "7c76c8b7-bf8e-4b4d-996a-1c7932680907": {
+      "payload": "sample_data/json.json"
+    },
+    "97727c7e-3800-46a0-9626-f37c16c8a4ae": {
+      "payload": "sample_data/defaultstringtype.dwl"
+    },
+    "5d6b2f64-488b-4645-9b5d-dcc2e4d4b7ae": {
+      "payload": "sample_data/list_json.json",
+      "attributes": "sample_data/httprequestattributes.dwl"
+    },
+    "9663df48-7f8f-49dc-be15-c02d31fb721a": {
+      "payload": "sample_data/products.xml"
+    },
+    "72696232-fd60-4710-887a-b8857a257865": {
+      "payload": "sample_data/json_1.json"
+    },
+    "fe0ff82c-eabc-4ca3-9c88-e1f3f3c51e7e": {
+      "payload": "sample_data/products_1.xml"
+    }
+  }
+}

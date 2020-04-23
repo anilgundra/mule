@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="coreFlow" doc:id="d8f84564-171a-41ce-89a6-bd3271829d39" >
+		<http:listener doc:name="Listener" doc:id="20a79ec3-43a1-43bf-a781-ab92b1244fb9" config-ref="HTTP_Listener_8081" path="/core"/>
+		<ee:transform doc:name="core" doc:id="fe0ff82c-eabc-4ca3-9c88-e1f3f3c51e7e">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json 
+var str = upper("Orey Anil Gundra,gray,grey sss!!!!")
+var strreg="babble, bebble, boat,bibble, bobble, bubble,bat,mat,oat,pat,tat,that, cat,cot,dat,oat"
+var tmpstr = "anil.gundra123@gmail.com"
+var strarray=["Am","bomma","Anil","Gundra","babble", "bebble", "bibble", "bobble", "bubble"]
+var Num = [2.3,4.5,4,6.8,5,6,1,3]
+var dob = "05-12-1990" as Date{format:"dd-MM-yyyy"}
+var flatarr = [["a","v"],[1,3,5],[]]
+var mapObjstr = { name : "Shoki", id : 5678,dept:"dev" }
+var myData =
+{ user : [
+   {
+     group : "dev",
+     myarray : [
+       { name : "Shoki", id : 5678,dept:"dev" },
+       { name : "Mariano", id : 9123 ,dept:"test"},
+       { name : "karri", id : 9124 ,dept:"dev"}
+     ]
+   }
+ ]
+}
+--- 
+core:{
+	zip: [0,1,2] zip Num,
+	OutPut:write(mapObjstr,"application/csv"),
+	uuid:uuid(),
+	unzip:unzip(flatarr),
+	typeOf:[ typeOf("A b"), typeOf([1,2]), typeOf(34), typeOf(true), typeOf({ a : 5 }) ],
+	trim:trim(" anil gundra "), 
+	myrange: 1 to 5,
+	sqrt:sqrt(144),
+	spiltBy:joinBy("anil gundra 28 vskp" splitBy  /\s/,"->") ,
+	sizeOf:[sizeOf(tmpstr),sizeOf(Num)] ,
+	scan:["hey anil gundra" scan(/\w* \w* \w*/),"anil.gundra@gmail.com" scan (/(\w*).(\w*)@(\w*).com/)],
+	replace:["123-456-7890" replace /.*-/ with(""),"abhdba" replace  /ab/ with ("")],
+	reduce:Num reduce $$ + $,
+	sum:sum(Num),
+	readUrlclasspath:readUrl("classpath://examples/products.xml","application/xml"),
+	readurl:readUrl("https://jsonplaceholder.typicode.com/posts/1", "application/json"),
+	read:read('{"name":"anil","age":24}','application/json'),
+	randomint:randomInt(100000000) as String{format:"##.##"},
+	random: (random()*100) as String{format:"##,##"},
+	pow:Num map pow($,3),
+	pluck:mapObjstr pluck(value,key) -> {(key):value} ,
+	orederby:Num orderBy -$,
+	mod:Num map mod($,6),
+	//maxby:myData.user.myarray  maxBy ((item) -> item.id),
+	max:max(Num),
+	mapObj:mapObjstr mapObject ((value, key, index) -> (index):value  ),
+	log:log("WARNING","this is anil gundra"),
+	joinBy:joinBy(Num,'-'),
+	isLeapYear:isLeapYear( "19-03-2020" as Date {format:"dd-MM-yyyy"}),
+	isInteger:Num map isInteger($),
+	isEven:Num map isEven($),
+	isOdd:Num map isOdd($),
+	isEmpty:flatarr map isEmpty($),
+	isDecimal:Num map isDecimal($),
+	isblank:not isBlank(str),
+	groupbytest:flatten(myData.user.myarray)groupBy $.dept ,
+	flattentest:flatten(myData.user.myarray),
+	vflatmap:flatarr flatMap ((item, index) -> item),
+	vartemp:tmpstr matches /\w*\.\w*\d{3}\@[a-z]*\.com/,
+findreg:strreg find /[m-p]at/,	
+disnctby:Num distinctBy $,
+findStr:lower(str) find /gr(a)y/,
+filterNum:Num filter(value) -> value<4,
+filterstr:strarray filter(value) -> value contains ("A"),
+findstrarray:strarray find "Gundra",
+endswith:str endsWith "A!!!!",
+startswith:str startsWith  upper("orey"),
+daysdifference:daysBetween(dob,now()),
+payloadContains:payload.products.*product.brandName contains  "HP",	
+StrContains:str contains upper("anil"),
+average:avg(Num)as String{format:"##.##"} ,
+ceilval:Num map {ceilval:ceil($)},
+floorval:Num map floor($) ,
+absolute:Num map $ as String { format: "##.##" }  
+
+}
+//tmpreg:tmpstr matches  /\d{5}(-\d{4})?(#\d{3})?(!!\d{6})/,
+//var tmpstr = "44444!!123456"]]></ee:set-payload>
+				<ee:set-attributes resource="jjj.dw.dwl" />
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="crypto n Arrays" doc:id="1eee062d-9387-4002-9c25-1a7c52afe5b1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import dw::Crypto
+import * from dw::core::Arrays
+var users = [{id: "1", name:"Mariano"},{id: "2", name:"Leandro"},{id: "3", name:"Julian"},{id: "5", name:"Julian"}]
+var products = [{ownerId: "1", name:"DataWeave"},{ownerId: "1", name:"BAT"}, {ownerId: "3", name:"DataSense"}, {ownerId: "4", name:"SmartConnectors"}]
+var myusers=["anil","nn","sunil","vani"]
+var mynumbers=[1,2,8,3,4,5]
+output application/json
+---
+cryptoNarrays:{
+	takewhile:mynumbers takeWhile $ <= 2,
+	take:take(myusers,2),
+	sumBy: [ { a: 1 }, { a: 2 }, { a: 3 } ] sumBy $.a,
+	splitwhere: myusers splitWhere((item) -> item contains "uni"),
+	splitAt:mynumbers splitAt  2,
+	some:[1,2,3] some (($ mod 2) == 0),
+	slice: slice(mynumbers,0,4),
+	partition:mynumbers partition (item) -> isEven(item),
+	outerjoin:outerJoin(users,products,(users)->users.id,(products)-> products.ownerId),
+	leftjoin:leftJoin(users,products,(users)->users.id,(products)-> products.ownerId),
+	join:join(users,products,(users) -> users.id,(products)->products.ownerId),
+	indexwhere:myusers indexWhere(item) -> item startsWith "s",
+	indexOf:indexOf(myusers,"sunil"),
+	every:[[1,2,3,4,5,6]every ($ <= 4 ),[1,1,1] every ($ == 1)],
+	dropwhile:[0,2,2,2,2,3,4,5,5,2,6] dropWhile $ <= 2,
+	drop: ["anil","nn","sunil","vani"]drop 2,
+	countBy:[1,2,3,4,5,6] countBy (($ mod 2) == 0),
+	divideby: [1, 2, 3, 4, 5, 6] divideBy 3, 
+	joinby:[1, 2, 3, 4, 5, 6] joinBy  "-",
+
+HMACBinary:Crypto::HMACBinary("Anil" as Binary,"Gundra" as Binary),
+HMACWith:Crypto::HMACWith("key" as Binary,"ANil Gundra"as Binary,"HmacSHA256"),
+MD5:Crypto::MD5("anil" as Binary),
+SHA1:Crypto::SHA1("anil" as Binary),
+hashwith:Crypto::hashWith("anil" as Binary,"MD2") 
+}
+
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="runtime" doc:id="c371711c-d05d-4b08-865d-59cdaa2929e8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::Runtime
+var ArrResult = []
+var result = {}
+var a  = "anil gundra"
+var user = {}
+var otherUser = {name: "DW"}
+fun randomNumber()=
+if(random() < 0.5)
+fail("this function is failing")
+else
+"Ok"
+output application/json
+
+---
+//if(sizeOf(ArrResult) <= 0) fail('Data was empty') else ArrResult
+//{ "result" : "SUCCESS" failIf (isEmpty(result)) }
+runtime:{
+try: try(() -> randomNumber()) wait 2000, 
+locationString:locationString(a),
+user: try(()-> user.name!) orElse ("No user"),
+otheruser:try(()-> otherUser.name) orElse ("no user"),
+props : prop("user.timezone"),
+props : props()
+
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="strings" doc:id="21ac9adc-466c-40dd-8ee4-c93ee92c4acd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::core::Strings
+import * from dw::core::Arrays
+var myData =
+{ user : [
+   {
+     group : "dev",
+     myarray : [
+       { name : "Shoki", id : 5678 },
+       { name : "Mariano", id : 9123 }
+     ]
+   }
+ ]
+}
+output application/json
+---
+Strings:
+{
+	appendifmissing:[appendIfMissing("anil gundra","dra"),appendIfMissing("anil gun","dra")],
+	prependidmissing:[prependIfMissing("Mr anil","Mr"),prependIfMissing("gundra","Mr ")],
+	wrapifmissing:wrapIfMissing("ab", "x"),
+	wrapwith: wrapWith("'ab'", "'"),
+	unwrap:unwrap("asavx","x"),
+	camelize:camelize("_anil_gundra_mr"),
+	captialize:capitalize("anil gundra"),
+	charcode:charCode("Mule"),
+	charatcode:charCodeAt("anil",3),
+	dasherize:[dasherize("anil gundra"),dasherize("anil_gundra")],
+	fromcharcode:fromCharCode(112),
+	isalpha:[isAlpha("abs"),isAlpha("ac2")],
+	isalphanumeric:[isAlphanumeric("abs"),isAlphanumeric("ace22"),isAlphanumeric(233),isAlphanumeric("a-xv2")],
+	 isWhitespace: [isWhitespace(""), isWhitespace("avs"), isWhitespace("  ")],
+	 leftpad:[leftPad("anil",8),leftPad("anil",4)],
+	 rightpad:rightPad("anil",8),
+	 ordinalize:[ordinalize(1),ordinalize(2),ordinalize(3)],
+	 pularize :[pluralize("fungus"),pluralize("candy"),pluralize("paint")],
+	 singularlize:[singularize("boxes"),singularize("geese")],
+	repeat:repeat("a",4),
+	substringAfterLast:substringAfterLast("abcbaassc", "a"),
+	substringafter:substringAfter("abcbaassc",4),
+	substringBefore:substringBefore("abcbaassc","a"),
+	substringBeforeLast:substringBeforeLast("abcbaassc","a"),
+	underscore:underscore("customer-first-name"),
+	test:"I heart DataWeave" find /\w*ea\w*(\b)/,
+	t1:[0,1] zip ["a","b"],
+	t2:flatten(myData.user),
+	t3:[1,23,4,5,] reduce ($ ),
+	t4:[0, 1, 2, 3, 4] reduce ((item, acc = {}) -> acc ++ { a: item })pluck $,
+	t5:"192.88.99.0/24" splitBy(/[.\/]/),
+	t6:[1, 2, 3, 4] countBy sizeOf($ mod 2 == 0)
+	
+	
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="69bdedbb-3f65-446b-9b08-c16bfb1282ad" />
+	</flow>
+</mule>
