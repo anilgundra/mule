@@ -9,6 +9,7 @@
 
 	<name>studentapplication</name>
 
+
     <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -25,7 +26,17 @@
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
-				</configuration>
+	<cloudHubDeployment>
+	<muleVersion>4.2.2</muleVersion>
+	<username>anilgundra1</username>
+	<password>143@ammA</password>
+	<environment>Sandbox</environment>
+	<objectStoreV2>true</objectStoreV2>
+	<applicationName>studentapplication</applicationName>
+	<workers>1</workers>
+	<workerType>Micro</workerType>
+	</cloudHubDeployment>				
+</configuration>
 			</plugin>
 		</plugins>
 	</build>

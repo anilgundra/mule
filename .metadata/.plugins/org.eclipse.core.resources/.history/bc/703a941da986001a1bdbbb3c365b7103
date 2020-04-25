@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:oauth2-provider="http://www.mulesoft.org/schema/mule/oauth2-provider"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/oauth2-provider http://www.mulesoft.org/schema/mule/oauth2-provider/current/mule-oauth2-provider.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="c5606e63-7918-4190-82ef-bb0c4fe777c8" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<os:object-store name="client_os" doc:name="Object store" doc:id="9470de2a-2726-4a27-98bd-d66b6404aa99" />
+	<os:object-store name="token_os" doc:name="Object store" doc:id="b1a5b714-4ce8-4960-81c3-55fc302b5b4e" />
+	<oauth2-provider:config name="OAuth2_Provider_Config" doc:name="OAuth2 Provider Config" doc:id="1a95732c-5cd7-45ea-8c1d-9c9444a96c7c" listenerConfig="HTTP_Listener_config" clientStore="client_os" supportedGrantTypes="CLIENT_CREDENTIALS" >
+		<oauth2-provider:token-config tokenStore="token_os" />
+	</oauth2-provider:config>
+	<flow name="dynamic-muleoauthFlow" doc:id="8828932d-3b2f-4a6d-9dfe-0d94a9184fba" >
+		<http:listener doc:name="Listener" doc:id="075b4be6-af4f-4ae8-a36a-e3dec295cdeb" config-ref="HTTP_Listener_config" path="/createclient/{client_id}/{client_secret}">
+			<http:response >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="0b5da4c2-e770-4652-a059-82626a22f436" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import dw::Crypto
+output application/json
+---
+{
+	client_id:Crypto::MD5(attributes.uriParams.client_id as Binary),
+	client_secret:Crypto::SHA1(attributes.uriParams.client_secret as Binary)
+	
+	}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="client_id" ><![CDATA[%dw 2.0
+import dw::Crypto
+output application/json
+var client_id= Crypto::MD5(attributes.uriParams.client_id as Binary)
+---
+client_id]]></ee:set-variable>
+				<ee:set-variable variableName="cleint_secret" ><![CDATA[%dw 2.0
+import dw::Crypto
+output application/json
+var client_secret= Crypto::MD5(attributes.uriParams.client_secret as Binary)
+---
+client_secret
+]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<oauth2-provider:create-client doc:name="Create client" doc:id="c29c9062-e0d1-4cd6-93d7-4539ae1e1d00" config-ref="OAuth2_Provider_Config" clientId="#[payload.client_id]" type="CONFIDENTIAL" secret="#[payload.client_secret]" clientName="#[attributes.uriParams.client_id]" authorizedGrantTypes='#[["CLIENT_CREDENTIALS"]]' description='#[""]' principal='#[""]' redirectUris='#[["abc.com"]]'/>
+		<set-payload value='#[payload]' doc:name="Set Payload" doc:id="dcd8e1b8-67c0-4ab0-8420-15f8b058c80c" />
+	</flow>
+	<flow name="validate" doc:id="da185d27-c54c-4238-902f-d32fef08ea50" >
+		<http:listener doc:name="Listener" doc:id="16cd436f-339a-433f-93d7-2a0e26588b53" config-ref="HTTP_Listener_config" path="/validate">
+			<http:response >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<oauth2-provider:validate-token doc:name="Validate token" doc:id="9149f050-cac3-4814-b850-73017598dc0a" config-ref="OAuth2_Provider_Config"/>
+	</flow>
+	<flow name="retriveFromObjectStore" doc:id="1c43e8a5-f422-43d8-b927-2b1e768bcd4e" >
+		<http:listener doc:name="Listener" doc:id="1f54dc93-f450-49ad-8013-2de70e5604a4" config-ref="HTTP_Listener_config" path="/retrieve"/>
+		<os:retrieve-all doc:name="Retrieve all" doc:id="aadf8314-0e14-44bf-966a-db547a2190c9" objectStore="client_os"/>
+	</flow>
+</mule>
