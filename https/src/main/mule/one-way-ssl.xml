@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+	<http:listener-config name="HTTPS_listener_config_8083" doc:name="HTTP Listener config" doc:id="b3325d0e-defd-4e2f-a0da-45cc7651e40f" >
+		<http:listener-connection protocol="HTTPS" host="0.0.0.0" port="8083" >
+			<tls:context >
+				<tls:key-store type="jks" path="server-keystore.jks" keyPassword="password" password="password" />
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	<http:listener-config name="HTTP_Listener_config_8081" doc:name="HTTP Listener config" doc:id="56108146-eb78-453d-96b4-2f6d881c9ce6" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="f72d4e2e-79c5-4c96-a709-ce7c0a0a0e6d" >
+		<http:request-connection protocol="HTTPS" host="localhost" port="8083" >
+			<tls:context >
+				<tls:trust-store path="client-Truststore.jks" password="password" type="jks" />
+			</tls:context>
+		</http:request-connection>
+	</http:request-config>
+	<flow name="one-way-sslFlow" doc:id="6e528cf3-e485-4761-ba0f-a24500ac4c0b" >
+		<http:listener doc:name="Listener" doc:id="c495c5f6-65aa-4b3b-a36a-fdcc20a3b624" config-ref="HTTPS_listener_config_8083" path="/onewayssl/server">
+			<http:response >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<set-payload value='#["https server connection working"]' doc:name="Set Payload" doc:id="161be8fc-2da6-4de6-827c-62f213ec5484" />
+	</flow>
+	<flow name="one-way-sslClient" doc:id="82996cad-69c5-4523-b0c0-944b08f0492b" >
+		<http:listener doc:name="Listener" doc:id="ae285375-85ce-45fe-a21f-e39763fd1397" config-ref="HTTP_Listener_config_8081" path="/onewayssl/client">
+			<http:response >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<http:request method="GET" doc:name="Request" doc:id="56f92409-96d4-43ad-b6ee-89c1597c76f8" config-ref="HTTP_Request_configuration" path="/onewayssl/server"/>
+	</flow>
+</mule>

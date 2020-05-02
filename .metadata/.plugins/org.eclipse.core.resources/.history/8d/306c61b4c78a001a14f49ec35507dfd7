@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="one-way-sslFlow" doc:id="6e528cf3-e485-4761-ba0f-a24500ac4c0b" >
+		<http:listener doc:name="Listener" doc:id="c495c5f6-65aa-4b3b-a36a-fdcc20a3b624" config-ref="HTTP_Listener_config"/>
+	</flow>
+</mule>

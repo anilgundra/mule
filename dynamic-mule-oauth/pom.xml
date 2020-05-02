@@ -25,6 +25,16 @@
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
+				<cloudHubDeployment>
+						<muleVersion>4.2.2</muleVersion>
+					<workers>1</workers>
+					<workerType>Micro</workerType>
+					<username>anilgundra1</username>
+					<password>143@ammA</password>
+					<objectStoreV2>true</objectStoreV2>
+					<applicationName>dynamic-mule-oauth</applicationName>
+					<environment>Sandbox</environment>
+					</cloudHubDeployment>
 				</configuration>
 			</plugin>
 		</plugins>
